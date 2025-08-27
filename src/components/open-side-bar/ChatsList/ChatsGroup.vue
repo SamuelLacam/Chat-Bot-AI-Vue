@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import ChatItemSideBar from './ChatItemSideBar.vue'
+import ChatItem from "./ChatsGroup/ChatItem.vue";
 </script>
 
 <template>
   <div class="chats-container">
-    <ChatItemSideBar />
-    <ChatItemSideBar />
-    <ChatItemSideBar />
-    <ChatItemSideBar />
-    <ChatItemSideBar />
+    <ChatItem />
+    <ChatItem />
+    <ChatItem />
+    <ChatItem />
+    <ChatItem />
   </div>
 </template>
 

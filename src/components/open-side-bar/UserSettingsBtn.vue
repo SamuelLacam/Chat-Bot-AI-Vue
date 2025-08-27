@@ -1,13 +1,13 @@
 <template>
-  <div class="btn-container">
-    <div class="user-image">
+  <div role="button" class="btn-container">
+    <button class="user-image">
       <svg xmlns="http://www.w3.org/2000/svg" height="16" viewBox="0 0 640 640">
         <path
           d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"
           fill="#F8FAFC"
         />
       </svg>
-    </div>
+    </button>
     <span class="user-label">User Name</span>
     <div class="exit-btn-wrapper">
       <button class="exit-btn">
@@ -48,6 +48,7 @@
 .user-image {
   width: 34px;
   height: 34px;
+  border: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,6 +59,8 @@
 
 .user-label {
   flex-grow: 1;
+  color: #475569;
+  font-size: 14px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -97,7 +100,7 @@
 }
 
 .exit-btn:hover {
-  transform: scale(1.1) rotate(5deg);
+  transform: scale(1.1);
 }
 
 .btn-container:has(.exit-btn-wrapper:hover) {

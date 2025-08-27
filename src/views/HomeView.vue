@@ -1,11 +1,17 @@
 <script setup>
-import ChatConversation from '@/components/ChatConversation.vue'
-import OpenSideBar from '@/components/OpenSideBar.vue'
+import ChatConversation from "@/components/ChatConversation.vue";
+import OpenSideBar from "@/components/OpenSideBar.vue";
 </script>
 
 <template>
-  <OpenSideBar />
-  <ChatConversation />
+  <div class="layout">
+    <OpenSideBar />
+    <ChatConversation />
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.layout {
+  display: flex;
+}
+</style>

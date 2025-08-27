@@ -26,6 +26,7 @@ watch(showMenu, (newValue) => {
   <div>
     <button ref="ellipsisBtnRef" @click="showMenu = !showMenu">
       <svg
+        :class="{ 'open-menu': showMenu }"
         width="20"
         height="36"
         viewBox="0 0 20 20"
@@ -51,5 +52,13 @@ button {
   background-color: transparent;
   border: none;
   border-radius: 100%;
+}
+
+button > svg {
+  transition: all 0.3s ease;
+}
+
+.open-menu {
+  transform: rotate(90deg);
 }
 </style>

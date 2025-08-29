@@ -38,7 +38,7 @@ watch(showMenu, (newValue) => {
         ></path>
       </svg>
     </button>
-    <ChatSettingsMenu v-if="showMenu" ref="menuRef" :ellipsisBtnRef="ellipsisBtnRef" />
+    <ChatSettingsMenu v-if="showMenu" ref="menuRef" />
   </div>
 </template>
 

@@ -1,13 +1,15 @@
 <template>
   <header>
-    <div class="brand-name">
-      <div class="logo-wrapper">
-        <div class="logo">
-          <div class="blue-laces"></div>
-          <div class="purple-laces"></div>
+    <div class="container">
+      <div class="brand-name">
+        <div class="logo-wrapper">
+          <div class="logo">
+            <div class="blue-laces"></div>
+            <div class="purple-laces"></div>
+          </div>
         </div>
+        <h1 class="title">GIZELLE</h1>
       </div>
-      <h1 class="title">GIZELLE</h1>
       <button class="reduce-btn">
         <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
           <path
@@ -31,11 +33,19 @@ header {
   --position-left-square: calc((var(--position-purple) - var(--position-blue)) * -1 - 1px);
 }
 
+.container {
+  width: 85%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* gap: 10px; */
+  padding: 43px 0 50px;
+}
+
 .brand-name {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 43px 0 50px 25px;
 }
 
 .title {
@@ -48,7 +58,7 @@ header {
 .reduce-btn {
   width: 40px;
   height: 40px;
-  margin-left: 20px;
+  /* margin-left: 20px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -112,7 +122,7 @@ header {
 
 .purple-laces::before {
   position: absolute;
-  content: '';
+  content: "";
   left: var(--position-left-square);
   height: var(--logo-border-size);
   width: calc(var(--logo-border-size) + 2px);

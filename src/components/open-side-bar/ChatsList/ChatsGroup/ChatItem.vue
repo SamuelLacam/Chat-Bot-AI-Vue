@@ -44,7 +44,7 @@ import EllipsisBtn from "./EllipsisBtn.vue";
       </svg>
     </div>
     <span class="chat-name">Nom du chat un peu trop long pour être entièrement affiché</span>
-    <EllipsisBtn class="menu-ellipsis" />
+    <EllipsisBtn />
   </button>
 </template>
 
@@ -72,12 +72,6 @@ import EllipsisBtn from "./EllipsisBtn.vue";
   color: #000000; /* SVG en noir par défaut */
 }
 
-.menu-ellipsis {
-  position: relative;
-  border-radius: 100%;
-  transition: all 0.3s ease;
-}
-
 .chat-name {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -102,12 +96,6 @@ import EllipsisBtn from "./EllipsisBtn.vue";
 
 .chat-item-container:hover .menu-ellipsis {
   color: #000000; /* Dernier SVG reste noir au hover du conteneur */
-}
-
-/* Hover spécifique sur le dernier SVG */
-.menu-ellipsis:hover {
-  background-color: #77b5ff; /* Background du dernier SVG au hover */
-  color: #475569 !important; /* Couleur du dernier SVG au hover (override le noir) */
 }
 
 /* .chat-item-container {

@@ -1,14 +1,17 @@
 <script setup>
-import ChatsHandleSideBar from './open-side-bar/ChatsHandleSideBar.vue'
-import HeaderSideBar from './open-side-bar/HeaderSideBar.vue'
+import ChatsList from "./open-side-bar/ChatsList.vue";
+import SideBarActions from "./open-side-bar/SideBarActions.vue";
+import SideBarHeader from "./open-side-bar/SideBarHeader.vue";
+import UserSettingsBtn from "./open-side-bar/UserSettingsBtn.vue";
 </script>
 
 <template>
   <aside>
-    <HeaderSideBar />
-    <ChatsHandleSideBar />
+    <SideBarHeader />
+    <SideBarActions />
+    <ChatsList />
+    <UserSettingsBtn />
   </aside>
-  <main></main>
 </template>
 
 <style scoped>
@@ -22,5 +25,16 @@ aside {
   /* background-color: rgb(190, 190, 190); */
   border-bottom-right-radius: 26px;
   border-top-right-radius: 26px;
+}
+
+.top-btn-container {
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  /* max-width: fit-content; */
+  /* justify-content: center; */
+  /* margin: 0 auto 10px; */
+  /* margin-bottom: 10px; */
 }
 </style>

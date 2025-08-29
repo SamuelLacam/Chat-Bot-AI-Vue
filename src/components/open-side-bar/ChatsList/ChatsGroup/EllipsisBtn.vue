@@ -23,8 +23,8 @@ watch(showMenu, (newValue) => {
 </script>
 
 <template>
-  <div>
-    <button ref="ellipsisBtnRef" @click="showMenu = !showMenu">
+  <div class="menu-ellipsis-container">
+    <button ref="ellipsisBtnRef" @click="showMenu = !showMenu" :class="{ 'show-menu': showMenu }">
       <svg
         :class="{ 'open-menu': showMenu }"
         width="20"
@@ -38,11 +38,22 @@ watch(showMenu, (newValue) => {
         ></path>
       </svg>
     </button>
-    <ChatSettingsMenu v-if="showMenu" ref="menuRef" />
+    <ChatSettingsMenu v-if="showMenu" ref="menuRef" :ellipsisBtnRef="ellipsisBtnRef" />
   </div>
 </template>
 
 <style scoped>
+.menu-ellipsis-container {
+  position: relative;
+  border-radius: 100%;
+  transition: all 0.3s ease;
+}
+
+.menu-ellipsis-container:hover,
+.show-menu {
+  background-color: #77b5ff;
+}
+
 button {
   display: flex;
   justify-content: center;

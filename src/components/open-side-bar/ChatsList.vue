@@ -5,17 +5,21 @@ import SectionDivider from "./ChatsList/SectionDivider.vue";
 </script>
 
 <template>
-  <SectionDivider>
-    <template #label>Your conversations </template>
-    <template #other>
-      <DeleteAllChatsBtn />
-    </template>
-  </SectionDivider>
   <div class="scroll-layout">
+    <SectionDivider>
+      <template #label>Your conversations </template>
+      <template #other>
+        <DeleteAllChatsBtn />
+      </template>
+    </SectionDivider>
     <ChatsGroup />
     <SectionDivider>
       <template #label>Last 7 days</template>
     </SectionDivider>
+    <ChatsGroup />
+    <ChatsGroup />
+    <ChatsGroup />
+    <ChatsGroup />
   </div>
 </template>
 

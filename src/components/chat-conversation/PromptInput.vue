@@ -1,6 +1,19 @@
+<script setup>
+import { ref } from "vue";
+const emit = defineEmits(["sendMessage"]);
+
+const inputRef = ref(null);
+
+const submitHandle = () => {
+  if (inputRef.value.value) {
+    emit("sendMessage");
+  }
+};
+</script>
+
 <template>
-  <div class="prompt-input-container">
-    <button class="add-image-btn">
+  <div @click="inputRef.focus()" class="prompt-input-container">
+    <button @click.stop class="add-image-btn">
       <svg
         width="20"
         height="20"
@@ -19,31 +32,33 @@
         ></path>
       </svg>
     </button>
-    <input type="text" class="prompt-input" placeholder="Ask a question" />
-    <button class="send-prompt-btn">
-      <svg
-        width="20"
-        height="20"
-        viewBox="-1 -1 22 22"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M5.39969 4.32015L13.8897 1.49015C17.6997 0.220154 19.7697 2.30015 18.5097 6.11015L15.6797 14.6002C13.7797 20.3102 10.6597 20.3102 8.75969 14.6002L7.91969 12.0802L5.39969 11.2402C-0.310312 9.34016 -0.310312 6.23016 5.39969 4.32015Z"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M8.10938 11.6498L11.6894 8.05981"
-          stroke="white"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button>
+    <form @submit.prevent="submitHandle" class="prompt-form">
+      <input ref="inputRef" type="text" class="prompt-input" placeholder="Ask a question" />
+      <button @click.stop type="submit" class="send-prompt-btn">
+        <svg
+          width="20"
+          height="20"
+          viewBox="-1 -1 22 22"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M5.39969 4.32015L13.8897 1.49015C17.6997 0.220154 19.7697 2.30015 18.5097 6.11015L15.6797 14.6002C13.7797 20.3102 10.6597 20.3102 8.75969 14.6002L7.91969 12.0802L5.39969 11.2402C-0.310312 9.34016 -0.310312 6.23016 5.39969 4.32015Z"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M8.10938 11.6498L11.6894 8.05981"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </form>
   </div>
 </template>
 
@@ -61,6 +76,12 @@
   cursor: text;
 }
 
+.prompt-form {
+  display: flex;
+  gap: 5px;
+  flex-grow: 1;
+}
+
 .prompt-input {
   flex-grow: 1;
   font-size: 16px;
@@ -75,6 +96,7 @@
 button {
   display: flex;
   padding: 10px;
+  justify-content: center;
   align-items: center;
   border-radius: 100%;
   border: none;

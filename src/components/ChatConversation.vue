@@ -2,15 +2,23 @@
 import { ref } from "vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
 
-const newChat = ref(true);
+const messageContainer = ref(null);
+const showWelcomeMessage = ref(true);
 </script>
 
 <template>
-  <button @click="newChat = !newChat"></button>
   <main>
-    <h2 class="new-chat-message">For a question, there is always an answer.</h2>
+    <Transition name="fade-out">
+      <div v-if="showWelcomeMessage" ref="messageContainer" class="welcome-message-container">
+        <h2 class="welcome-message">For a question, there is always an answer.</h2>
+      </div>
+    </Transition>
     <section>
-      <PromptInput :class="{ 'new-chat-layout': newChat }" class="chat-layout" />
+      <PromptInput
+        @sendMessage="showWelcomeMessage = false"
+        :class="{ 'welcome-message-layout': showWelcomeMessage }"
+        class="prompt-input-layout"
+      />
     </section>
   </main>
 </template>
@@ -24,27 +32,42 @@ main {
 
 section {
   margin: 0 20px;
-  height: 65%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   transition: all 0.5s ease;
 }
 
-.new-chat-message {
+.welcome-message-container {
+  position: relative;
+  transition: all 0.5s ease;
+}
+
+.fade-out-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-out-leave-to {
+  opacity: 0;
+}
+
+.welcome-message {
   margin-top: 25%;
+  right: 0;
+  left: 0;
+  position: absolute;
   color: #334155;
   text-align: center;
   white-space: nowrap;
 }
 
-.chat-layout {
+.prompt-input-layout {
   transition: all 0.5s ease;
-  /* margin-top: auto; */
   margin-bottom: 0;
 }
 
-.new-chat-layout {
+.welcome-message-layout {
   margin-bottom: 50% !important;
 }
 </style>

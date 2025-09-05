@@ -1,10 +1,13 @@
 <script setup>
-import NewChatBtn from "./NewChatBtn.vue";
-import SearchOnChatsBtn from "./SearchOnChatsBtn.vue";
+import { inject } from "vue";
+import NewChatBtn from "../shared/NewChatBtn.vue";
+import SearchOnChatsBtn from "../shared/SearchOnChatsBtn.vue";
+
+const expandedSideBar = inject("expandedSideBar");
 </script>
 
 <template>
-  <div class="container">
+  <div :class="{ extanted: expandedSideBar, collapsed: !expandedSideBar }" class="container">
     <NewChatBtn />
     <SearchOnChatsBtn />
   </div>
@@ -17,7 +20,6 @@ import SearchOnChatsBtn from "./SearchOnChatsBtn.vue";
 }
 
 .container {
-  width: 85%;
   margin: 0 auto;
   display: flex;
   /* gap: 10px; */
@@ -27,5 +29,14 @@ import SearchOnChatsBtn from "./SearchOnChatsBtn.vue";
   /* justify-content: center; */
   /* margin: 0 auto 10px; */
   /* margin-bottom: 10px; */
+}
+
+.extanted {
+  width: 85%;
+}
+
+.collapsed {
+  flex-direction: column;
+  gap: 10px;
 }
 </style>

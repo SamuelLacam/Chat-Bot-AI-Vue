@@ -1,13 +1,13 @@
 <script setup>
-import ChatsList from "./open-side-bar/ChatsList.vue";
-import SideBarActions from "./open-side-bar/SideBarActions.vue";
-import SideBarHeader from "./open-side-bar/SideBarHeader.vue";
-import UserSettingsBtn from "./open-side-bar/UserSettingsBtn.vue";
+import ChatsList from "./sidebar/expanded/ChatsList.vue";
+import SideBarActions from "./sidebar/shared/SideBarActions.vue";
+import SideBarHeader from "./sidebar/shared/SideBarHeader.vue";
+import UserSettingsBtn from "./sidebar/shared/UserSettingsBtn.vue";
 </script>
 
 <template>
   <aside>
-    <SideBarHeader />
+    <SideBarHeader @reduce-side-bar="$emit('reduceSideBar')" />
     <SideBarActions />
     <ChatsList />
     <UserSettingsBtn />

@@ -101,6 +101,9 @@ button {
   border-radius: 100%;
   border: none;
   transition: all 0.3s ease;
+  /* will-change: transform; */
+  /* transform-origin: center center;
+  backface-visibility: hidden; */
 }
 
 .add-image-btn {
@@ -116,6 +119,8 @@ button {
 }
 
 .send-prompt-btn:hover {
-  scale: 1.1;
+  box-shadow: 0 0 0 2px rgba(86, 97, 246, 0.3);
+  transform: translateY(-1px);
+  /* transform: scale(1.1); */
 }
 </style>

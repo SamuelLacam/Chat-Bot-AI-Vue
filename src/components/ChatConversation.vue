@@ -53,7 +53,7 @@ section {
 }
 
 .welcome-message {
-  margin-top: 25%;
+  margin-top: 27%;
   right: 0;
   left: 0;
   position: absolute;
@@ -68,6 +68,6 @@ section {
 }
 
 .welcome-message-layout {
-  margin-bottom: 50% !important;
+  margin-bottom: 48% !important;
 }
 </style>

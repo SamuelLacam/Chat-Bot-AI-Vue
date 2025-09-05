@@ -18,8 +18,6 @@ import SectionDivider from "./ChatsList/SectionDivider.vue";
     </SectionDivider>
     <ChatsGroup />
     <ChatsGroup />
-    <ChatsGroup />
-    <ChatsGroup />
   </div>
 </template>
 

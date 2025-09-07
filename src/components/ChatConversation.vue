@@ -1,21 +1,23 @@
 <script setup>
 import { ref } from "vue";
+import AIConversation from "./chat-conversation/AIConversation.vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
+import WelcomeMessage from "./chat-conversation/WelcomeMessage.vue";
 
-// const messageContainer = ref(null);
 const showWelcomeMessage = ref(true);
+const showConversation = ref(false);
 </script>
 
 <template>
   <main>
-    <div ref="messageContainer" class="welcome-message-container">
-      <Transition name="fade-out">
-        <h2 v-if="showWelcomeMessage" class="welcome-message">
-          For a question, there is always an answer.
-        </h2>
-      </Transition>
-    </div>
-    <div :class="{ grow: !showWelcomeMessage }"></div>
+    <WelcomeMessage
+      v-if="!showConversation"
+      :showWelcomeMessage="showWelcomeMessage"
+      @animation-finished="showConversation = true"
+    />
+
+    <AIConversation v-else />
+
     <section :class="{ grow: showWelcomeMessage }">
       <PromptInput @sendMessage="showWelcomeMessage = false" class="prompt-input-layout" />
     </section>
@@ -33,42 +35,13 @@ main {
 
 section {
   margin: 0 20px;
-  /* height: 100%; */
   transition: all 0.5s ease;
   position: relative;
-  /* height: 55%; */
   flex-basis: 60px;
   flex-grow: 0;
 }
 
-.grow {
-  flex-grow: 1 !important;
-}
-
-.fade-out-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-out-leave-to {
-  opacity: 0;
-}
-
-.welcome-message-container {
-  position: relative;
-  flex-grow: 1;
-}
-
-.welcome-message {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  transition: all 0.5s ease;
-  margin-top: auto;
-  color: #334155;
-  text-align: center;
-  white-space: nowrap;
-}
-
+/* quand showWelcomeMessage === true -> section grandit */
 .grow {
   transition: all 0.5s ease;
   flex-grow: 1;
@@ -79,8 +52,5 @@ section {
   position: absolute;
   width: 100%;
   height: 60px;
-  /* bottom: 0; */
-  /* top: 0 !important; */
-  /* top: calc(100% - 60px); */
 }
 </style>

@@ -2,23 +2,22 @@
 import { ref } from "vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
 
-const messageContainer = ref(null);
+// const messageContainer = ref(null);
 const showWelcomeMessage = ref(true);
 </script>
 
 <template>
   <main>
-    <Transition name="fade-out">
-      <div v-if="showWelcomeMessage" ref="messageContainer" class="welcome-message-container">
-        <h2 class="welcome-message">For a question, there is always an answer.</h2>
-      </div>
-    </Transition>
-    <section>
-      <PromptInput
-        @sendMessage="showWelcomeMessage = false"
-        :class="{ 'welcome-message-layout': showWelcomeMessage }"
-        class="prompt-input-layout"
-      />
+    <div ref="messageContainer" class="welcome-message-container">
+      <Transition name="fade-out">
+        <h2 v-if="showWelcomeMessage" class="welcome-message">
+          For a question, there is always an answer.
+        </h2>
+      </Transition>
+    </div>
+    <div :class="{ grow: !showWelcomeMessage }"></div>
+    <section :class="{ grow: showWelcomeMessage }">
+      <PromptInput @sendMessage="showWelcomeMessage = false" class="prompt-input-layout" />
     </section>
   </main>
 </template>
@@ -28,20 +27,22 @@ main {
   width: 770px;
   height: calc(100vh - 60px);
   margin: 30px auto;
+  display: flex;
+  flex-direction: column;
 }
 
 section {
   margin: 0 20px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+  /* height: 100%; */
   transition: all 0.5s ease;
+  position: relative;
+  /* height: 55%; */
+  flex-basis: 60px;
+  flex-grow: 0;
 }
 
-.welcome-message-container {
-  position: relative;
-  transition: all 0.5s ease;
+.grow {
+  flex-grow: 1 !important;
 }
 
 .fade-out-leave-active {
@@ -52,22 +53,34 @@ section {
   opacity: 0;
 }
 
+.welcome-message-container {
+  position: relative;
+  flex-grow: 1;
+}
+
 .welcome-message {
-  margin-top: 27%;
-  right: 0;
-  left: 0;
   position: absolute;
+  bottom: 0;
+  width: 100%;
+  transition: all 0.5s ease;
+  margin-top: auto;
   color: #334155;
   text-align: center;
   white-space: nowrap;
 }
 
-.prompt-input-layout {
+.grow {
   transition: all 0.5s ease;
-  margin-bottom: 0;
+  flex-grow: 1;
 }
 
-.welcome-message-layout {
-  margin-bottom: 48% !important;
+.prompt-input-layout {
+  transition: all 0.5s ease;
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  /* bottom: 0; */
+  /* top: 0 !important; */
+  /* top: calc(100% - 60px); */
 }
 </style>

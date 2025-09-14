@@ -13,3 +13,6 @@ app.use(createPinia());
 app.use(router);
 
 app.mount("#app");
+
+// API KEY
+// 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

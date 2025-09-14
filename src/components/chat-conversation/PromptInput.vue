@@ -1,12 +1,15 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 const emit = defineEmits(["sendMessage"]);
 
 const inputRef = ref(null);
 
+onMounted(() => inputRef.value.focus());
+
 const submitHandle = () => {
   if (inputRef.value.value) {
-    emit("sendMessage");
+    emit("sendMessage", inputRef.value.value);
+    inputRef.value.value = "";
   }
 };
 </script>
@@ -64,16 +67,21 @@ const submitHandle = () => {
 
 <style scoped>
 .prompt-input-container {
+  width: 100%;
+  height: 60px;
   padding: 10px;
-  /* margin: auto 0; */
-  /* margin-top: auto; */
+  position: absolute;
+  /* bottom: 0px; */
+  top: -30px;
   display: flex;
   gap: 5px;
   align-items: center;
-  background-color: white;
   border-radius: 50px;
+  border: 1px solid #eaeaea;
+  background-color: white;
   box-sizing: border-box;
   cursor: text;
+  transition: all 0.5s ease;
 }
 
 .prompt-form {

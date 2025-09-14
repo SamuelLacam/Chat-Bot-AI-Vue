@@ -1,11 +1,14 @@
 <script setup>
 import { ref } from "vue";
-import AIConversation from "./chat-conversation/AIConversation.vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
+import TheConversation from "./chat-conversation/TheConversation.vue";
 import WelcomeMessage from "./chat-conversation/WelcomeMessage.vue";
 
 const showWelcomeMessage = ref(true);
 const showConversation = ref(false);
+
+const prompts = ref([]);
+// const prompt = "";
 </script>
 
 <template>
@@ -16,10 +19,17 @@ const showConversation = ref(false);
       @animation-finished="showConversation = true"
     />
 
-    <AIConversation v-else />
+    <TheConversation v-else :prompts="prompts" />
 
     <section :class="{ grow: showWelcomeMessage }">
-      <PromptInput @sendMessage="showWelcomeMessage = false" class="prompt-input-layout" />
+      <PromptInput
+        @sendMessage="
+          (message) => {
+            showWelcomeMessage = false;
+            prompts.push(message);
+          }
+        "
+      />
     </section>
   </main>
 </template>
@@ -34,23 +44,20 @@ main {
 }
 
 section {
-  margin: 0 20px;
+  /* margin: 0 20px; */
   transition: all 0.5s ease;
   position: relative;
-  flex-basis: 60px;
-  flex-grow: 0;
+  flex: 0 0 30px;
+  /* box-shadow: 0 0 15px 5px #f1f5f9; */
+  /* box-shadow: 0 -15px 15px #f1f5f9; */
+  /* box-shadow: 0 -15px 15px 5px black; */
+  box-shadow: 0 -15px 15px 5px #f1f5f9;
+  /* flex-basis: 60px;
+  flex-grow: 0; */
 }
 
-/* quand showWelcomeMessage === true -> section grandit */
 .grow {
   transition: all 0.5s ease;
   flex-grow: 1;
-}
-
-.prompt-input-layout {
-  transition: all 0.5s ease;
-  position: absolute;
-  width: 100%;
-  height: 60px;
 }
 </style>

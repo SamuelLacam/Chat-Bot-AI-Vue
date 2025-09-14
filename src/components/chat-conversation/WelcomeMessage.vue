@@ -1,4 +1,5 @@
 <script setup>
+const emit = defineEmits(["animation-finished"]);
 defineProps({
   showWelcomeMessage: Boolean,
 });
@@ -6,7 +7,7 @@ defineProps({
 
 <template>
   <div class="welcome-message-container">
-    <Transition name="fade-out" @after-leave="$emit('animation-finished')">
+    <Transition name="fade-out" @after-leave="emit('animation-finished')">
       <h2 v-if="showWelcomeMessage" class="welcome-message">
         For a question, there is always an answer.
       </h2>
@@ -27,7 +28,8 @@ defineProps({
   bottom: 0;
   width: 100%;
   transition: all 0.5s ease;
-  margin-top: auto;
+  /* margin-top: auto; */
+  margin: auto 0 50px;
   color: #334155;
   text-align: center;
   white-space: nowrap;

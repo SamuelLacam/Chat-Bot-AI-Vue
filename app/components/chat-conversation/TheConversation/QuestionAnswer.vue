@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import AIMessage from "./AIMessage.vue";
 import UserMessage from "./UserMessage.vue";
-import { getAnswer } from "@/composables/useAI.js";
+import { getAnswer } from "@/composable/useAI.js";
 
 const { prompt } = defineProps({
   prompt: String,

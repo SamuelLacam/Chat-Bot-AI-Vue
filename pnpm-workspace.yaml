@@ -1,2 +1,7 @@
 onlyBuiltDependencies:
+  - '@parcel/watcher'
   - esbuild
+  - unrs-resolver
+
+overrides:
+  jwt: link:../../../../../../AppData/Local/pnpm/global/5/node_modules/jwt

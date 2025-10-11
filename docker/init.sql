@@ -15,6 +15,7 @@ CREATE TABLE conversation (
   user_id INT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  last_message_at TIMESTAMP
   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
   INDEX idx_user_id (user_id)
 );
@@ -28,6 +29,26 @@ CREATE TABLE message (
   FOREIGN KEY (conversation_id) REFERENCES conversation(id) ON DELETE CASCADE,
   INDEX idx_conversation_id (conversation_id)
 );
+
+DELIMITER $$
+CREATE TRIGGER message_inserted
+AFTER INSERT ON message
+FOR EACH ROW
+BEGIN
+  UPDATE conversation 
+  SET last_message_at = NEW.created_at
+  WHERE id = NEW.conversation_id;
+END$$
+
+CREATE TRIGGER message_updated
+AFTER INSERT ON message
+FOR EACH ROW
+BEGIN
+  UPDATE conversation
+  SET last_message_at = NEW.created_at
+  WHERE id = NEW.conversation_id;
+END;
+DELIMITER ;
 
 -- User Test
 INSERT INTO user (login, password) VALUES ('tkt@tkt.tkt', 'a');

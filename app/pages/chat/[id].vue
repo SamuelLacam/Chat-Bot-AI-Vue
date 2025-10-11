@@ -1,11 +1,5 @@
 <script setup>
-import ChatConversation from "@/components/ChatConversation.vue";
-import CloseSideBar from "@/components/CloseSideBar.vue";
-import OpenSideBar from "@/components/OpenSideBar.vue";
-import { provide, ref } from "vue";
-
-const expandedSideBar = ref(true);
-provide("expandedSideBar", expandedSideBar);
+const expandedSideBar = inject("expandedSideBar");
 </script>
 
 <template>

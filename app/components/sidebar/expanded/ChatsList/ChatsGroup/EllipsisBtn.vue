@@ -1,13 +1,23 @@
-<script setup>
+<script setup lang="ts">
 import { ref, watch } from "vue";
 import ChatSettingsMenu from "./ChatSettingsMenu.vue";
 
-const showMenu = ref(false);
-const ellipsisBtnRef = ref(null);
-const menuRef = ref(null);
+type chat = {
+  id: number;
+  name: string;
+};
 
-function closeMenu(event) {
-  if (!ellipsisBtnRef.value?.contains(event.target) && menuRef.value.rootEl != event.target) {
+defineProps<{ chat: chat }>();
+
+const showMenu = ref(false);
+const ellipsisBtnRef = ref<HTMLButtonElement | null>(null);
+const menuRef = ref<{ rootEl: HTMLElement | null } | null>(null);
+
+function closeMenu(event: Event) {
+  if (
+    !ellipsisBtnRef.value?.contains(event.target as Element) &&
+    menuRef.value?.rootEl != event.target
+  ) {
     console.log("close the menu");
     showMenu.value = false;
   }
@@ -40,7 +50,13 @@ onUnmounted(() => document.removeEventListener("click", closeMenu));
         />
       </svg>
     </button>
-    <ChatSettingsMenu v-if="showMenu" ref="menuRef" />
+    <ChatSettingsMenu
+      v-show="showMenu"
+      ref="menuRef"
+      :chat="chat"
+      @rename="(id) => $emit('rename', id)"
+      @delete="(id) => $emit('delete', id)"
+    />
   </div>
 </template>
 

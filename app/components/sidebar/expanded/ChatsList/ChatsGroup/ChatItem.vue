@@ -1,5 +1,49 @@
-<script setup>
+<script setup lang="ts">
 import EllipsisBtn from "./EllipsisBtn.vue";
+type chat = {
+  id: number;
+  name: string;
+};
+
+const props = defineProps<{
+  chat: chat;
+}>();
+
+const inputRef = ref<HTMLInputElement | null>(null);
+const showRename = ref(false);
+const newName = ref(props.chat.name);
+
+// if (!props.chat.name) {
+//   props.chat.name = "Unnamed chat";
+//   unnamedClass.value = true;
+// }
+
+const showRenameInput = async () => {
+  showRename.value = true;
+  newName.value = props.chat.name;
+  await nextTick();
+  inputRef.value?.select();
+};
+
+const renameChat = async (newName: string) => {
+  try {
+    await $fetch(`/api/chats/${props.chat.id}`, {
+      method: "PATCH",
+      body: {
+        name: newName,
+      },
+    });
+    props.chat.name = newName;
+    console.log(newName);
+    console.log(props.chat.name);
+  } catch (error: any) {
+    //TODO: show an error notification
+    console.log(error.statusMessage);
+    console.log(error.data.message);
+  } finally {
+    showRename.value = false;
+  }
+};
 </script>
 
 <template>
@@ -43,9 +87,28 @@ import EllipsisBtn from "./EllipsisBtn.vue";
         />
       </svg>
     </div>
-    <span class="chat-name">Nom du chat un peu trop long pour être entièrement affiché</span>
+    <span
+      v-if="!showRename"
+      :class="{ 'unnamed-chat': !props.chat.name }"
+      class="chat-name"
+      placeholder="Unnamed chat"
+    >
+      {{ chat.name }}
+    </span>
+    <input
+      v-else
+      v-model="newName"
+      @keydown.enter="renameChat(newName)"
+      @keydown.esc="showRename = false"
+      ref="inputRef"
+      type="text"
+    />
     <ClientOnly>
-      <EllipsisBtn />
+      <EllipsisBtn
+        :chat="chat"
+        @rename="(id: number) => showRenameInput()"
+        @delete="(id: number) => $emit('delete', id)"
+      />
     </ClientOnly>
   </button>
 </template>
@@ -75,12 +138,18 @@ import EllipsisBtn from "./EllipsisBtn.vue";
 }
 
 .chat-name {
+  text-align: left;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: #475569; /* Texte en gris par défaut */
   font-size: 16px;
   flex: 1; /* Pour que le texte prenne l'espace disponible */
+}
+
+.unnamed-chat::before {
+  color: #909aa7;
+  content: "Unnamed chat";
 }
 
 /* Hover sur le conteneur principal */

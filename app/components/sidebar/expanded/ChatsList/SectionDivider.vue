@@ -2,7 +2,7 @@
   <hr />
   <div class="container">
     <div class="label">
-      <slot name="label"></slot>
+      <slot></slot>
     </div>
     <slot name="other"></slot>
   </div>

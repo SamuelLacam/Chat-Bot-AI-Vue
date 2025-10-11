@@ -4,10 +4,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/eslint"],
   // ssr: false,
-
   routeRules: {
-    "/": { ssr: true },
+    // "/": { redirect: "/new" },
   },
+
+  // vue: {
+  //   compilerOptions: {
+  //     isCustomElement: (tag) => tag === "ellipsis-btn",
+  //   },
+  // },
 
   runtimeConfig: {
     dbHost: process.env.DB_HOST,

@@ -1,13 +1,17 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
 import TheConversation from "./chat-conversation/TheConversation.vue";
 import WelcomeMessage from "./chat-conversation/WelcomeMessage.vue";
 
-const showWelcomeMessage = ref(true);
-const showConversation = ref(false);
+// const showWelcomeMessage = ref(true);
+// const showConversation = ref(false);
+defineProps<{
+  showWelcomeMessage: boolean;
+  showConversation: boolean;
+}>();
 
-const prompts = ref([]);
+const prompts = ref<string[]>([]);
 // const prompt = "";
 </script>
 
@@ -18,13 +22,12 @@ const prompts = ref([]);
       :show-welcome-message="showWelcomeMessage"
       @animation-finished="showConversation = true"
     />
-
     <TheConversation v-else :prompts="prompts" />
 
     <section :class="{ grow: showWelcomeMessage }">
       <PromptInput
         @send-message="
-          (message) => {
+          (message: string) => {
             showWelcomeMessage = false;
             prompts.push(message);
           }

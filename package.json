@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@pinia/nuxt": "0.11.2",
     "dompurify": "^3.2.6",
     "jwt": "link:../../../../../../AppData/Local/pnpm/global/5/node_modules/jwt",
     "marked": "^16.2.1",

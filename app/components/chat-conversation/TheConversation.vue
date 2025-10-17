@@ -1,15 +1,34 @@
-<script setup>
-import QuestionAnswer from "./TheConversation/QuestionAnswer.vue";
+<script setup lang="ts">
+import Message from "./Message.vue";
 
-const { prompts } = defineProps({
-  prompts: Array,
+// const { prompts } = defineProps({
+//   prompts: Array,
+// });
+
+const chatsStore = useChatsStore();
+
+const messages = ref<MapIterator<[number, { role: string; content: string }]>>(null!);
+const chatId = Number(useRoute().params.id);
+
+onMounted(async () => {
+  try {
+    await chatsStore.initializeMessages(chatId);
+    messages.value = chatsStore.conversations.get(chatId)!.messages.entries();
+  } catch (error: any) {
+    console.log(error.message);
+  }
 });
 </script>
 
 <template>
   <div class="wrapper">
     <div class="conversation-container">
-      <QuestionAnswer v-for="(prompt, index) in prompts" :key="index" :prompt="prompt" />
+      <Message
+        v-for="[id, { role, content }] in messages"
+        :key="id"
+        :content="content"
+        :role="role"
+      />
     </div>
   </div>
 </template>

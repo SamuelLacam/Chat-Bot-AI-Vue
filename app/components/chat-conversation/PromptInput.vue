@@ -1,15 +1,22 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
+
 const emit = defineEmits(["sendMessage"]);
-
-const inputRef = ref(null);
-
+const chatsStore = useChatsStore();
+const inputRef = ref<HTMLInputElement>(null!);
 onMounted(() => inputRef.value.focus());
 
-const submitHandle = () => {
-  if (inputRef.value.value) {
-    emit("sendMessage", inputRef.value.value);
-    inputRef.value.value = "";
+const submitHandle = async () => {
+  const inuputMessage = inputRef.value.value;
+  if (inuputMessage) {
+    try {
+      const convId = await chatsStore.createConversation(inuputMessage);
+      // emit("sendMessage");
+      inputRef.value.value = "";
+      await navigateTo(`/chat/${convId}`);
+    } catch (error) {
+      // console.log(error.message);
+    }
   }
 };
 </script>

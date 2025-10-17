@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
       "select id, name from conversation where user_id = ? order by updated_at desc limit ? offset ?",
       [userId, limit, offset],
     );
-    return results;
+    return results as { id: number; name: string }[];
   } catch (error: any) {
     if (error.statusCode) throw error;
     throw new ServerError();

@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint"],
+  modules: ["@nuxt/eslint", "@pinia/nuxt"],
   // ssr: false,
   routeRules: {
     // "/": { redirect: "/new" },
@@ -12,6 +12,10 @@ export default defineNuxtConfig({
   //   compilerOptions: {
   //     isCustomElement: (tag) => tag === "ellipsis-btn",
   //   },
+  // },
+  // typescript: {
+  //   typeCheck: true,
+  //   strict: true,
   // },
 
   runtimeConfig: {

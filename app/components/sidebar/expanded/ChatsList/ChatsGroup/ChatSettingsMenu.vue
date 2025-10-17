@@ -1,35 +1,18 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-type chat = {
-  id: number;
-  name: string;
-};
-
 const props = defineProps<{ chat: chat }>();
-const emit = defineEmits<{ (e: "delete", id: number): void; (e: "rename", id: number): void }>();
+// const emit = defineEmits<{ (e: "delete", id: number): void; (e: "rename", id: number): void }>();
 
 const rootEl = ref<HTMLDivElement | null>(null);
 defineExpose({
   rootEl,
 });
-
-const deleteChat = async () => {
-  try {
-    await $fetch(`/api/chats/${props.chat.id}`, {
-      method: "DELETE",
-    });
-    emit("delete", props.chat.id);
-  } catch (error: any) {
-    console.log(error.statusMessage);
-    console.log(error.data.message);
-  }
-};
 </script>
 
 <template>
   <div ref="rootEl" class="menu-container">
-    <button class="rename-btn" @click="$emit('rename', chat.id)">
+    <button class="rename-btn" @click="$emit('rename')">
       <svg
         width="13"
         height="13"
@@ -45,7 +28,7 @@ const deleteChat = async () => {
 
       <span>Rename</span>
     </button>
-    <button class="delete-btn" @click="deleteChat">
+    <button class="delete-btn" @click="$emit('delete')">
       <svg
         width="14"
         height="16"

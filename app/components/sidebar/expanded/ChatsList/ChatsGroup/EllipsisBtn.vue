@@ -2,11 +2,6 @@
 import { ref, watch } from "vue";
 import ChatSettingsMenu from "./ChatSettingsMenu.vue";
 
-type chat = {
-  id: number;
-  name: string;
-};
-
 defineProps<{ chat: chat }>();
 
 const showMenu = ref(false);
@@ -54,15 +49,15 @@ onUnmounted(() => document.removeEventListener("click", closeMenu));
       v-show="showMenu"
       ref="menuRef"
       :chat="chat"
-      @rename="(id) => $emit('rename', id)"
-      @delete="(id) => $emit('delete', id)"
+      @rename="$emit('rename')"
+      @delete="$emit('delete')"
     />
   </div>
 </template>
 
 <style scoped>
 .menu-ellipsis-container {
-  position: relative;
+  /* position: relative; */
   border-radius: 100%;
   transition: all 0.3s ease;
 }

@@ -16,3 +16,11 @@
     }
   ]
 }
+
+// {
+//   "extends": "./.nuxt/tsconfig.json",
+//   "compilerOptions": {
+//     "types": []
+//   },
+//   "include": ["types/**/*.d.ts", "nuxt.config.ts", "app.config.ts", "server/**/*.ts"]
+// }

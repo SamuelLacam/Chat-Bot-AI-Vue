@@ -1,5 +1,7 @@
 <script setup>
 const expandedSideBar = inject("expandedSideBar");
+const showWelcomeMessage = ref(false);
+const showConversation = ref(true);
 </script>
 
 <template>
@@ -12,7 +14,10 @@ const expandedSideBar = inject("expandedSideBar");
       <OpenSideBar v-if="expandedSideBar" @reduce-side-bar="expandedSideBar = false" />
       <CloseSideBar v-else @extend-side-bar="expandedSideBar = true" />
     </Transition>
-    <ChatConversation />
+    <ChatConversation
+      :showWelcomeMessage="showWelcomeMessage"
+      :showConversation="showConversation"
+    />
   </div>
 </template>
 

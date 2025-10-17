@@ -1,44 +1,22 @@
 <script setup lang="ts">
 import ChatItem from "./ChatsGroup/ChatItem.vue";
 
-type Chat = {
-  id: number;
-  name: string;
-};
+const chats = ref<Conversations>(null!);
+const chatsStore = useChatsStore();
 
-const chats = ref<Chat[]>([]);
-try {
-  const data = await $fetch<Chat[]>("/api/chats", {
-    method: "GET",
-    query: {
-      offset: 0,
-      limit: 10,
-    },
-  });
-  chats.value.push(...data);
-  // const { data, error } = await useFetch("/api/chats", {
-  //   method: "GET",
-  //   query: {
-  //     offset: 0,
-  //     limit: 10,
-  //   },
-  // });
-  // chats.value.push(...data);
-} catch (error) {}
-
-const removeFromList = (idToDelete: number) => {
-  chats.value = chats.value.filter(({ id }) => id !== idToDelete);
-};
+onMounted(async () => {
+  try {
+    await chatsStore.initializeConversations();
+    chats.value = chatsStore.conversations;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+});
 </script>
 
 <template>
   <div class="chats-container">
-    <ChatItem
-      v-for="(chat, index) in chats"
-      :key="index"
-      :chat="chat"
-      @delete="(idToDelete: number) => removeFromList(idToDelete)"
-    />
+    <ChatItem v-for="[id, chat] in chats" :key="id" :chat="{ id, ...chat }" />
   </div>
 </template>
 

@@ -79,12 +79,7 @@ const deleteChat = async () => {
           />
         </svg>
       </div>
-      <span
-        v-if="!showRename"
-        :class="{ 'unnamed-chat': !props.chat.name }"
-        class="chat-name"
-        placeholder="Unnamed chat"
-      >
+      <span v-if="!showRename" :class="{ 'unnamed-chat': !props.chat.name }" class="chat-name">
         {{ chat.name }}
       </span>
       <input

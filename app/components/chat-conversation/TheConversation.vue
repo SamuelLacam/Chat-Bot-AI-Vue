@@ -7,13 +7,13 @@ import Message from "./Message.vue";
 
 const chatsStore = useChatsStore();
 
-const messages = ref<MapIterator<[number, { role: string; content: string }]>>(null!);
+const messages = ref<Conversation["messages"]>(null!);
 const chatId = Number(useRoute().params.id);
 
 onMounted(async () => {
   try {
     await chatsStore.initializeMessages(chatId);
-    messages.value = chatsStore.conversations.get(chatId)!.messages.entries();
+    messages.value = chatsStore.conversations.get(chatId)!.messages;
   } catch (error: any) {
     console.log(error.message);
   }
@@ -29,6 +29,7 @@ onMounted(async () => {
         :content="content"
         :role="role"
       />
+      <br />
     </div>
   </div>
 </template>

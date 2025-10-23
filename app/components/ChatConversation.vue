@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import PromptInput from "./chat-conversation/PromptInput.vue";
 import TheConversation from "./chat-conversation/TheConversation.vue";
 import WelcomeMessage from "./chat-conversation/WelcomeMessage.vue";
@@ -11,7 +10,7 @@ defineProps<{
   showConversation: boolean;
 }>();
 
-const prompts = ref<string[]>([]);
+// const prompts = ref<string[]>([]);
 // const prompt = "";
 </script>
 
@@ -22,7 +21,7 @@ const prompts = ref<string[]>([]);
       :show-welcome-message="showWelcomeMessage"
       @animation-finished="showConversation = true"
     />
-    <TheConversation v-else :prompts="prompts" />
+    <TheConversation v-else />
 
     <section :class="{ grow: showWelcomeMessage }">
       <PromptInput

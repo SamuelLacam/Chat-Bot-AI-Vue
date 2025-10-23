@@ -1,11 +1,19 @@
 <script setup lang="ts">
-defineProps<{ content: string; role: string }>();
+import DOMPurify from "dompurify";
+import { marked } from "marked";
+
+const props = defineProps<{ content: string; role: string }>();
+const aiMessage = ref("");
+if (props.role === "assistant") {
+  const markedMessage = await marked.parse(props.content);
+  aiMessage.value = DOMPurify.sanitize(markedMessage);
+}
 </script>
 
 <template>
   <div :class="['message', `message-${role}`]">
     <span v-if="role === 'user'"> {{ content }}</span>
-    <span v-else-if="role === 'assistant'" v-html="content"></span>
+    <span v-else-if="role === 'assistant'" v-html="aiMessage"></span>
   </div>
 </template>
 

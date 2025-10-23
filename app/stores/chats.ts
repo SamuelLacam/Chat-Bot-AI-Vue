@@ -107,7 +107,25 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const createMessage = () => {};
+  const createMessage = async (convId: number, content: string) => {
+    try {
+      const data = await $fetch("/api/messages", {
+        method: "POST",
+        body: {
+          convId,
+          content,
+        },
+      });
+      addMessage(conversations, convId, data.userMessageInsertId, { content, role: "user" });
+      addMessage(conversations, convId, data.aiMessageInsertId, {
+        content: data.reply,
+        role: "assistant",
+      });
+    } catch (error: any) {
+      console.log(error.statusMessage || error.message);
+      throw new Error("Fetch error");
+    }
+  };
 
   const fetchMessages = async (id: number) => {
     try {

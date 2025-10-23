@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-
-const emit = defineEmits(["sendMessage"]);
-const chatsStore = useChatsStore();
+const promptSubmit = inject("promptSubmit") as Function;
 const inputRef = ref<HTMLInputElement>(null!);
+
 onMounted(() => inputRef.value.focus());
 
 const submitHandle = async () => {
-  const inuputMessage = inputRef.value.value;
-  if (inuputMessage) {
+  const inputMessage = inputRef.value.value;
+  if (inputMessage) {
     try {
-      const convId = await chatsStore.createConversation(inuputMessage);
-      // emit("sendMessage");
+      promptSubmit(inputMessage);
       inputRef.value.value = "";
-      await navigateTo(`/chat/${convId}`);
-    } catch (error) {
-      // console.log(error.message);
+    } catch (error: any) {
+      console.log(error.message);
     }
   }
 };

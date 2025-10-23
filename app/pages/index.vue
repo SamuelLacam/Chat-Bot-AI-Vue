@@ -1,4 +1,11 @@
-<script setup>
+<script setup lang="ts">
+const chatsStore = useChatsStore();
+provide("promptSubmit", async (firstMessage: string) => {
+  console.log("home");
+  const convId = await chatsStore.createConversation(firstMessage);
+  navigateTo(`/chat/${convId}`);
+});
+
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(true);
 const showConversation = ref(false);

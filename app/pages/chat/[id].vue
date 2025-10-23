@@ -1,4 +1,11 @@
-<script setup>
+<script setup lang="ts">
+const chatsStore = useChatsStore();
+provide("promptSubmit", (content: string) => {
+  console.log("chat/id");
+  const convId = Number(useRoute().params.id);
+  chatsStore.createMessage(convId, content);
+});
+
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(false);
 const showConversation = ref(true);

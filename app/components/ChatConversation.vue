@@ -24,14 +24,7 @@ defineProps<{
     <TheConversation v-else />
 
     <section :class="{ grow: showWelcomeMessage }">
-      <PromptInput
-        @send-message="
-          (message: string) => {
-            showWelcomeMessage = false;
-            prompts.push(message);
-          }
-        "
-      />
+      <PromptInput />
     </section>
   </main>
 </template>

@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
       [login, pwd],
     );
     const userId = results[0]?.id;
-    console.log("userId", userId);
-    console.log("result[0]", results);
+    // console.log("userId", userId);
+    // console.log("result[0]", results);
     if (userId) {
       const token = jwt.encode({ userId, exp: Math.floor(Date.now()) + 3600000 }, config.jwtKey);
       setCookie(event, "Gizelle-jwt-auth", token, {

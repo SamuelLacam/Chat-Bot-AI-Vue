@@ -1,17 +1,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 const promptSubmit = inject("promptSubmit") as Function;
+const chatsStore = useChatsStore();
 const inputRef = ref<HTMLInputElement>(null!);
 
 onMounted(() => inputRef.value.focus());
+
+const testRef = ref("");
 
 const submitHandle = async () => {
   const inputMessage = inputRef.value.value;
   if (inputMessage) {
     try {
-      promptSubmit(inputMessage);
+      console.log("ok");
+      const { convId, messageId } = await promptSubmit(inputMessage);
+      const { insertId: replyId } = await chatsStore.createMessage(convId, "", "assistant");
+      chatsStore.streamAssistantReply(convId, messageId, replyId);
       inputRef.value.value = "";
     } catch (error: any) {
+      //TODO: comprendre l'erreur
       console.log(error.message);
     }
   }

@@ -1,3 +1,5 @@
+import { ref } from "vue";
+import { getAnswer } from "~/composable/useAI";
 // type Conversations = Map<number, Conversation>;
 
 // type Conversation = {
@@ -19,7 +21,7 @@ const addConversation = (
   content: string,
 ) => {
   const messages = new Map<number, Message>();
-  messages.set(messageId, { role: "user", content });
+  messages.set(messageId, reactive({ role: "user", content }));
   conversations.value.set(convId, { name: "", messages });
 };
 
@@ -31,7 +33,7 @@ const addMessage = (
 ) => {
   const conversation = conversations.value.get(convId);
   if (conversation) {
-    conversation.messages.set(messageId, { role: message.role, content: message.content });
+    conversation.messages.set(messageId, reactive({ ...message }));
   }
 };
 
@@ -47,7 +49,7 @@ export const useChatsStore = defineStore("chats", () => {
         },
       });
       addConversation(conversations, data.convId, data.messageId, firstMessage);
-      return data.convId;
+      return { convId: data.convId, messageId: data.messageId };
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
       throw new Error("Fetch error");
@@ -107,20 +109,18 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const createMessage = async (convId: number, content: string) => {
+  const createMessage = async (convId: number, content: string, role: string) => {
     try {
-      const data = await $fetch("/api/messages", {
+      const { insertId } = await $fetch("/api/messages", {
         method: "POST",
         body: {
           convId,
           content,
+          role,
         },
       });
-      addMessage(conversations, convId, data.userMessageInsertId, { content, role: "user" });
-      addMessage(conversations, convId, data.aiMessageInsertId, {
-        content: data.reply,
-        role: "assistant",
-      });
+      addMessage(conversations, convId, insertId, { content, role });
+      return { insertId };
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
       throw new Error("Fetch error");
@@ -144,16 +144,33 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const initializeMessages = async (id: number) => {
-    const conversation = conversations.value.get(id);
+  const initializeMessages = async (convId: number) => {
+    const conversation = conversations.value.get(convId);
     // TODO: on reload page, script should wait the conversation initialization, otherwise the condition throw an Error
     if (!conversation) throw new Error("This conversation is unavailable");
     if (!conversation.messages.size) {
-      const messages = await fetchMessages(id);
+      const messages = await fetchMessages(convId);
       messages.forEach(({ id, role, content }) => {
-        conversation.messages.set(id, { role, content });
+        addMessage(conversations, convId, id, { role, content });
+        // conversation.messages.set(id, { role, content });
       });
     }
+  };
+
+  const streamAssistantReply = async (convId: number, messageId: number, replyId: number) => {
+    // // TODO: add reply in the store
+    // const storedReply = ref(conversations.value.get(convId)?.messages.get(replyId));
+    // console.log(`storedReply: ${storedReply.value}`);
+
+    await getAnswer(messageId, replyId, (chunk: string) => {
+      const msg = conversations.value.get(convId)?.messages.get(replyId);
+      if (msg) msg.content += chunk;
+    });
+    console.log(conversations.value.get(convId)?.messages.get(replyId)?.content);
+
+    // const reply = await getAnswer(messageId, replyId);
+    // addMessage(conversations, convId, replyId + 1, { role: "assistant", content: reply });
+    // console.log(conversations.value.get(convId)?.messages.get(replyId + 1)?.content);
   };
 
   return {
@@ -166,5 +183,6 @@ export const useChatsStore = defineStore("chats", () => {
     createMessage,
     fetchMessages,
     initializeMessages,
+    streamAssistantReply,
   };
 });

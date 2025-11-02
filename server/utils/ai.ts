@@ -2,38 +2,39 @@
 
 import { Ref } from "vue";
 
-export const getAnswerTest = async (prompt: string) => {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization:
-        "Bearer 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",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "mistralai/mistral-small-3.2-24b-instruct:free",
-      messages: [
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-    }),
-  });
-  const data = await response.json();
-  return data.choices[0].message.content as string;
-};
+// export const getAnswerTest = async (prompt: string) => {
+//   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+//     method: "POST",
+//     headers: {
+//       Authorization:
+//         "Bearer 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",
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       model: "mistralai/mistral-small-3.2-24b-instruct:free",
+//       messages: [
+//         {
+//           role: "user",
+//           content: prompt,
+//         },
+//       ],
+//     }),
+//   });
+//   const data = await response.json();
+//   return data.choices[0].message.content as string;
+// };
 
+// TODO: handle ai provider error
 export const getAnswer = async (prompt: string, ref: Ref<string>) => {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
       Authorization:
-        "Bearer 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",
+        "Bearer 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",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "mistralai/mistral-small-3.2-24b-instruct:free",
+      model: "meta-llama/llama-3.3-8b-instruct:free",
       messages: [{ role: "user", content: prompt }],
       stream: true,
     }),
@@ -58,6 +59,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
 
       // Append new chunk to buffer
       buffer += decoder.decode(value, { stream: true });
+      // console.log(buffer);
 
       // Process complete lines from buffer
       while (true) {
@@ -76,8 +78,8 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
             const content = parsed.choices[0].delta.content;
             if (content) {
               // console.log(content);
-              ref.value += content;
-              await new Promise((resolve) => setTimeout(resolve, 20));
+              ref.value = content;
+              // await new Promise((resolve) => setTimeout(resolve, 20));
             }
           } catch (e) {
             // Ignore invalid JSON

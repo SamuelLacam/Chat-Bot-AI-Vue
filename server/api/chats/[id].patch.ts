@@ -12,9 +12,6 @@ export default defineEventHandler(async (event) => {
     const { name } = await readBody(event);
     const userId = event.context.user.userId;
     const db = getPool();
-    console.log(name);
-    console.log(userId);
-    console.log(id);
     await db.execute("update conversation set name = ? where id = ? and user_id = ?", [
       name,
       id,

@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import Message from "./Message.vue";
 
-// const { prompts } = defineProps({
-//   prompts: Array,
-// });
-
 const chatsStore = useChatsStore();
 
-const messages = ref<Conversation["messages"]>(null!);
-const chatId = Number(useRoute().params.id);
+// const messages = ref<Conversation["messages"]>(null!);
+const convId = Number(useRoute().params.id);
+const messages = computed<Conversation["messages"]>(() => {
+  // console.log("messages updated");
+  return chatsStore.conversations.get(convId)!.messages;
+});
 
 onMounted(async () => {
   try {
-    await chatsStore.initializeMessages(chatId);
-    messages.value = chatsStore.conversations.get(chatId)!.messages;
+    await chatsStore.initializeMessages(convId);
+    // messages.value = chatsStore.conversations.get(chatId)!.messages;
   } catch (error: any) {
     console.log(error.message);
   }
@@ -23,12 +23,7 @@ onMounted(async () => {
 <template>
   <div class="wrapper">
     <div class="conversation-container">
-      <Message
-        v-for="[id, { role, content }] in messages"
-        :key="id"
-        :content="content"
-        :role="role"
-      />
+      <Message v-for="[id, msg] in messages" :key="id" :message="msg" />
       <br />
     </div>
   </div>

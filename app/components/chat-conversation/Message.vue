@@ -2,18 +2,26 @@
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 
-const props = defineProps<{ content: string; role: string }>();
+const props = defineProps<{ message: Message }>();
+// watch(props.message, (value) => console.log("reply content ", value.content));
+
 const aiMessage = ref("");
-if (props.role === "assistant") {
-  const markedMessage = await marked.parse(props.content);
-  aiMessage.value = DOMPurify.sanitize(markedMessage);
-}
+watch(
+  () => props.message.content,
+  async (newVal) => {
+    if (props.message.role === "assistant") {
+      const markedMessage = await marked.parse(newVal);
+      aiMessage.value = DOMPurify.sanitize(markedMessage);
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>
-  <div :class="['message', `message-${role}`]">
-    <span v-if="role === 'user'"> {{ content }}</span>
-    <span v-else-if="role === 'assistant'" v-html="aiMessage"></span>
+  <div :class="['message', `message-${message.role}`]">
+    <span v-if="message.role === 'user'"> {{ message.content }}</span>
+    <span v-else-if="message.role === 'assistant'" v-html="aiMessage"></span>
   </div>
 </template>
 

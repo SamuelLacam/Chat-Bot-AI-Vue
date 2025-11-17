@@ -3,6 +3,7 @@ import { RowDataPacket } from "mysql2";
 export default defineEventHandler(async (event) => {
   try {
     const { chatId, offset, limit } = getQuery(event);
+    console.log(chatId, offset, limit);
     if (
       !chatId ||
       !offset ||

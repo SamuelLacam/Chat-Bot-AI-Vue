@@ -1,4 +1,7 @@
 // meta-llama/llama-3.3-8b-instruct:free
+// mistralai/mistral-small-3.2-24b-instruct:free
+// mistralai/mistral-small-24b-instruct-2501:free
+// deepseek/deepseek-chat-v3.1:free
 
 import { Ref } from "vue";
 
@@ -30,11 +33,11 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
     method: "POST",
     headers: {
       Authorization:
-        "Bearer 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",
+        "Bearer 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",
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "meta-llama/llama-3.3-8b-instruct:free",
+      model: "mistralai/mistral-small-24b-instruct-2501:free",
       messages: [{ role: "user", content: prompt }],
       stream: true,
     }),
@@ -59,7 +62,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
 
       // Append new chunk to buffer
       buffer += decoder.decode(value, { stream: true });
-      // console.log(buffer);
+      console.log(buffer);
 
       // Process complete lines from buffer
       while (true) {
@@ -77,7 +80,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
             const parsed = JSON.parse(data);
             const content = parsed.choices[0].delta.content;
             if (content) {
-              // console.log(content);
+              console.log(content);
               ref.value = content;
               // await new Promise((resolve) => setTimeout(resolve, 20));
             }

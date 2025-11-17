@@ -5,7 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  jwt: link:../../../../../AppData/Local/pnpm/global/5/node_modules/jwt
+  jwt: link:../../../AppData/Local/pnpm/global/5/node_modules/jwt
 
 importers:
 
@@ -18,8 +18,8 @@ importers:
         specifier: ^3.2.6
         version: 3.2.6
       jwt:
-        specifier: link:../../../../../AppData/Local/pnpm/global/5/node_modules/jwt
-        version: link:../../../../../AppData/Local/pnpm/global/5/node_modules/jwt
+        specifier: link:../../../AppData/Local/pnpm/global/5/node_modules/jwt
+        version: link:../../../AppData/Local/pnpm/global/5/node_modules/jwt
       marked:
         specifier: ^16.2.1
         version: 16.3.0

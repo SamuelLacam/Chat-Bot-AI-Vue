@@ -5,9 +5,9 @@ const chatsStore = useChatsStore();
 
 // const messages = ref<Conversation["messages"]>(null!);
 const convId = Number(useRoute().params.id);
-const messages = computed<Conversation["messages"]>(() => {
+const messages = computed<Conversation["messages"] | undefined>(() => {
   // console.log("messages updated");
-  return chatsStore.conversations.get(convId)!.messages;
+  return chatsStore.conversations.get(convId)?.messages;
 });
 
 onMounted(async () => {
@@ -15,7 +15,7 @@ onMounted(async () => {
     await chatsStore.initializeMessages(convId);
     // messages.value = chatsStore.conversations.get(chatId)!.messages;
   } catch (error: any) {
-    console.log(error.message);
+    console.error(error.message);
   }
 });
 </script>

@@ -27,13 +27,14 @@ import { Ref } from "vue";
 //   return data.choices[0].message.content as string;
 // };
 
+const config = useRuntimeConfig();
+
 // TODO: handle ai provider error
 export const getAnswer = async (prompt: string, ref: Ref<string>) => {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
-      Authorization:
-        "Bearer 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",
+      Authorization: `Bearer ${config.openRouterApiKey}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify({

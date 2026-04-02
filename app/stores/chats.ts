@@ -57,8 +57,23 @@ export const useChatsStore = defineStore("chats", () => {
   };
 
   const fetchConversations = async () => {
+    // try {
+    //   const { data } = await useFetch("/api/chats", {
+    //     method: "GET",
+    //     query: {
+    //       offset: 0,
+    //       limit: 10,
+    //     },
+    //   });
+    //   return data.value;
+    // } catch (error: any) {
+    //   console.log(error.statusMessage || error.message);
+    //   throw new Error("Fetch error");
+    // }
+    const headers = useRequestHeaders(["cookie"]);
     try {
       const data = await $fetch("/api/chats", {
+        headers,
         method: "GET",
         query: {
           offset: 0,
@@ -73,11 +88,16 @@ export const useChatsStore = defineStore("chats", () => {
   };
 
   const initializeConversations = async () => {
+    // console.log("[API] /api/chats call", {
+    //   time: new Date().toISOString(),
+    //   from: process.server ? "server" : "client",
+    // });
     if (!conversations.value.size) {
       const convs = await fetchConversations();
       convs.forEach(({ id, name }) => {
         conversations.value.set(id, { name, messages: new Map() });
       });
+      return convs;
     }
   };
 

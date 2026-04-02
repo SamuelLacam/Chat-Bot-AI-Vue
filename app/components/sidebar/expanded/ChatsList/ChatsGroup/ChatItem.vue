@@ -92,14 +92,14 @@ const deleteChat = async () => {
       />
     </button>
     <div class="anchor">
-      <ClientOnly>
-        <EllipsisBtn
-          :chat="chat"
-          @rename="showRenameInput()"
-          @delete="deleteChat()"
-          class="menu-ellipsis-container"
-        />
-      </ClientOnly>
+      <!-- <ClientOnly> -->
+      <EllipsisBtn
+        :chat="chat"
+        @rename="showRenameInput()"
+        @delete="deleteChat()"
+        class="menu-ellipsis-container"
+      />
+      <!-- </ClientOnly> -->
     </div>
   </div>
 </template>

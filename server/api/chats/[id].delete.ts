@@ -7,11 +7,11 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: 400,
         statusMessage: "Param error",
-        message: "It must have a id param and it must be a number",
+        message: "It must have an id param and it must be a number",
       });
     }
 
-    const userId = event.context.user.userId;
+    const userId = event.context.user?.userId;
     const db = getPool();
     /* const [result] = */ await db.execute<ResultSetHeader>(
       "delete from conversation where id = ? and user_id = ?",

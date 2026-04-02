@@ -10,7 +10,6 @@ export default defineEventHandler(async (event) => {
         statusMessage: "limit and offset query param expeted",
       });
     }
-
     const userId = event.context.user.userId;
     const db = getPool();
     const [results] = await db.execute<RowDataPacket[]>(

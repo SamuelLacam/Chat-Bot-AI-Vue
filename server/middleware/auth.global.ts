@@ -20,12 +20,12 @@ export default defineEventHandler((event) => {
     if (url.pathname.startsWith("/api")) {
       throw createError({ statusCode: 401, statusMessage: "Unauthenticated" });
     }
-    console.error("no token");
+    console.error("no jwt token");
     return sendRedirect(event, "/login");
   }
   try {
     const decoded = jwt.verify(token, config.jwtKey);
-    event.context.user = decoded;
+    event.context.user = decoded as AuthPayload;
   } catch (error: any) {
     if (url.pathname.startsWith("/api")) {
       throw createError({

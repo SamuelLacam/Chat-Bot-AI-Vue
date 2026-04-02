@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import ChatItem from "./ChatsGroup/ChatItem.vue";
 
-const chats = ref<Conversations>(null!);
 const chatsStore = useChatsStore();
-
-onMounted(async () => {
-  try {
-    await chatsStore.initializeConversations();
-    chats.value = chatsStore.conversations;
-  } catch (error: any) {
-    console.log(error.message);
-  }
-});
+const chats = computed<Conversations>(() => chatsStore.conversations);
+watch(chats, (value) => console.log("chats", value), { immediate: true });
+watch(
+  () => chatsStore.conversations,
+  (v) => console.log("aaaaaaa"),
+  { immediate: true },
+);
 </script>
 
 <template>

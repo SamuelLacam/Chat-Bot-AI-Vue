@@ -12,10 +12,7 @@ export default defineEventHandler(async (event) => {
       [login, pwd],
     );
     const token = jwt.encode(
-      {
-        userId: results.insertId,
-        exp: Math.floor(Date.now()) + 3600000,
-      },
+      { userId: results.insertId, exp: Math.floor(Date.now()) + 3600000 },
       config.jwtKey,
     );
     setCookie(event, "Gizelle-jwt-auth", token, {

@@ -14,8 +14,16 @@ export default defineNuxtConfig({
   //   },
   // },
   // typescript: {
-  //   typeCheck: true,
-  //   strict: true,
+  //   tsConfig: {
+  //     include: ["../types/app.d.ts"],
+  //   },
+  // },
+  // nitro: {
+  //   typescript: {
+  //     tsConfig: {
+  //       include: ["../types/**/*.d.ts"],
+  //     },
+  //   },
   // },
 
   runtimeConfig: {

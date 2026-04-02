@@ -9,6 +9,13 @@ provide("promptSubmit", async (content: string): Promise<{ convId: number; messa
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(false);
 const showConversation = ref(true);
+
+try {
+  await useAsyncData("conversations", chatsStore.initializeConversations);
+  // await chatsStore.initializeConversations();
+} catch (error: any) {
+  console.log(error.message);
+}
 </script>
 
 <template>

@@ -12,6 +12,14 @@ provide(
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(true);
 const showConversation = ref(false);
+
+try {
+  await useAsyncData("conversations", chatsStore.initializeConversations);
+  // await chatsStore.initializeConversations();
+} catch (error: any) {
+  console.log(error.message);
+}
+// onMounted(async () => {});
 </script>
 
 <template>

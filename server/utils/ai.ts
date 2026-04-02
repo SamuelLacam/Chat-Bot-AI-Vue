@@ -2,6 +2,8 @@
 // mistralai/mistral-small-3.2-24b-instruct:free
 // mistralai/mistral-small-24b-instruct-2501:free
 // deepseek/deepseek-chat-v3.1:free
+// arcee-ai/trinity-large-preview:free
+// nvidia/nemotron-3-nano-30b-a3b:free
 
 import { Ref } from "vue";
 
@@ -28,7 +30,6 @@ import { Ref } from "vue";
 // };
 
 const config = useRuntimeConfig();
-
 // TODO: handle ai provider error
 export const getAnswer = async (prompt: string, ref: Ref<string>) => {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -38,7 +39,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: "mistralai/mistral-small-24b-instruct-2501:free",
+      model: "arcee-ai/trinity-large-preview:free",
       messages: [{ role: "user", content: prompt }],
       stream: true,
     }),
@@ -63,7 +64,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
 
       // Append new chunk to buffer
       buffer += decoder.decode(value, { stream: true });
-      console.log(buffer);
+      // console.log(buffer);
 
       // Process complete lines from buffer
       while (true) {
@@ -81,7 +82,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
             const parsed = JSON.parse(data);
             const content = parsed.choices[0].delta.content;
             if (content) {
-              console.log(content);
+              // console.log(content);
               ref.value = content;
               // await new Promise((resolve) => setTimeout(resolve, 20));
             }

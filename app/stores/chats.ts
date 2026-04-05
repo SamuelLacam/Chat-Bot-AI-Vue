@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { getAnswer } from "~/composable/useAI";
+import { getAnswer, getConvName } from "~/composable/useAI";
 // type Conversations = Map<number, Conversation>;
 
 // type Conversation = {
@@ -166,7 +166,6 @@ export const useChatsStore = defineStore("chats", () => {
 
   const initializeMessages = async (convId: number) => {
     const conversation = conversations.value.get(convId);
-    // TODO: on reload page, script should wait the conversation initialization, otherwise the condition throw an Error
     if (!conversation) throw new Error("This conversation is unavailable");
     if (!conversation.messages.size) {
       const messages = await fetchMessages(convId);
@@ -178,7 +177,6 @@ export const useChatsStore = defineStore("chats", () => {
   };
 
   const streamAssistantReply = async (convId: number, messageId: number, replyId: number) => {
-    // // TODO: add reply in the store
     // const storedReply = ref(conversations.value.get(convId)?.messages.get(replyId));
     // console.log(`storedReply: ${storedReply.value}`);
 
@@ -193,6 +191,13 @@ export const useChatsStore = defineStore("chats", () => {
     // console.log(conversations.value.get(convId)?.messages.get(replyId + 1)?.content);
   };
 
+  const streamChatName = async (convId: number, messageId: number, replyId: number) => {
+    await getConvName(convId, messageId, replyId, (chunk: string) => {
+      const conv = conversations.value.get(convId);
+      if (conv) conv.name += chunk;
+    });
+  };
+
   return {
     conversations,
     createConversation,
@@ -204,5 +209,6 @@ export const useChatsStore = defineStore("chats", () => {
     fetchMessages,
     initializeMessages,
     streamAssistantReply,
+    streamChatName,
   };
 });

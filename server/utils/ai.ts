@@ -31,7 +31,7 @@ import { Ref } from "vue";
 
 const config = useRuntimeConfig();
 // TODO: handle ai provider error
-export const getAnswer = async (prompt: string, ref: Ref<string>) => {
+export const getAnswer = async (messages: aiMessages, ref: Ref<string>) => {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -40,7 +40,7 @@ export const getAnswer = async (prompt: string, ref: Ref<string>) => {
     },
     body: JSON.stringify({
       model: "arcee-ai/trinity-large-preview:free",
-      messages: [{ role: "user", content: prompt }],
+      messages,
       stream: true,
     }),
   });

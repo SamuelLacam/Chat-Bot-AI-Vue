@@ -10,13 +10,18 @@ const testRef = ref("");
 
 const submitHandle = async () => {
   const inputMessage = inputRef.value.value;
+  inputRef.value.value = "";
   if (inputMessage) {
     try {
-      console.log("ok");
-      const { convId, messageId } = await promptSubmit(inputMessage);
-      const { insertId: replyId } = await chatsStore.createMessage(convId, "", "assistant");
-      chatsStore.streamAssistantReply(convId, messageId, replyId);
-      inputRef.value.value = "";
+      // console.log("ok");
+      // const { convId, messageId } = await promptSubmit(inputMessage);
+      promptSubmit(inputMessage, async (convId: number, messageId: number) => {
+        // inputRef.value.value = "";
+        const { insertId: replyId } = await chatsStore.createMessage(convId, "", "assistant");
+        await chatsStore.streamAssistantReply(convId, messageId, replyId);
+        console.log("Reply is awaited ?");
+        return replyId;
+      });
     } catch (error: any) {
       //TODO: comprendre l'erreur
       console.log(error.message);

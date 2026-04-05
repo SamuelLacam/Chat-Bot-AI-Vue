@@ -43,8 +43,11 @@ export default defineEventHandler(async (event) => {
       res.write(`data: "${newToken}"\n\n`);
       reply += newToken;
     });
-    await getAnswer(content, token);
 
+    const messages: aiMessages = [{ role: "user", content }];
+    await getAnswer(messages, token);
+
+    // TODO Are we really need of conversation_id ?
     await db.execute<ResultSetHeader>(
       "update message set conversation_id = ?, content = ?, role = ? where id = ?",
       [results[0].conversation_id, reply, "assistant", replyId],

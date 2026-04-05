@@ -1,13 +1,13 @@
 <script setup lang="ts">
 const chatsStore = useChatsStore();
-provide(
-  "promptSubmit",
-  async (firstMessage: string): Promise<{ convId: number; messageId: number }> => {
-    const { convId, messageId } = await chatsStore.createConversation(firstMessage);
-    navigateTo(`/chat/${convId}`);
-    return { convId, messageId };
-  },
-);
+provide("promptSubmit", async (firstMessage: string, reply: Function) => {
+  const { convId, messageId } = await chatsStore.createConversation(firstMessage);
+  await navigateTo(`/chat/${convId}`);
+  const replyId = await reply(convId, messageId);
+  console.log("REPLYID:", replyId);
+  chatsStore.streamChatName(convId, messageId, replyId);
+  // return { convId, messageId };
+});
 
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(true);

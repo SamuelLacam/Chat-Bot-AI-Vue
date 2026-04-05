@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const chatsStore = useChatsStore();
-provide("promptSubmit", async (content: string): Promise<{ convId: number; messageId: number }> => {
+provide("promptSubmit", async (content: string, reply: Function) => {
   const convId = Number(useRoute().params.id);
   const { insertId: messageId } = await chatsStore.createMessage(convId, content, "user");
-  return { convId, messageId };
+  reply(convId, messageId);
 });
 
 const expandedSideBar = inject("expandedSideBar");

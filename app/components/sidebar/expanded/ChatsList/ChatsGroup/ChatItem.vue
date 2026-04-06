@@ -31,6 +31,8 @@ const renameChat = async () => {
 const deleteChat = async () => {
   try {
     await chatsStore.deleteConversation(props.chat.id);
+    const convId = Number(useRoute().params.id);
+    if (convId === props.chat.id) navigateTo("/");
   } catch (error: any) {
     console.log(error.message);
   }

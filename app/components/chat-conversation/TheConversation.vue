@@ -15,6 +15,7 @@ onMounted(async () => {
     await chatsStore.initializeMessages(convId);
     // messages.value = chatsStore.conversations.get(chatId)!.messages;
   } catch (error: any) {
+    await navigateTo("/");
     console.error(error.message);
   }
 });

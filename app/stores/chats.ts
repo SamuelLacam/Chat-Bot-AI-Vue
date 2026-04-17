@@ -21,8 +21,11 @@ const addConversation = (
   content: string,
 ) => {
   const messages = new Map<number, Message>();
-  messages.set(messageId, reactive({ role: "user", content }));
-  conversations.value.set(convId, { name: "", messages });
+  messages.set(messageId, reactive<Message>({ role: "user", content }));
+  conversations.value.set(convId, {
+    name: "",
+    messages,
+  });
 };
 
 const addMessage = (
@@ -39,6 +42,8 @@ const addMessage = (
 
 export const useChatsStore = defineStore("chats", () => {
   const conversations = ref<Conversations>(new Map());
+  const activeStreams = reactive<Map<number, AbortController>>(new Map());
+  const unreadChats = reactive<Set<number>>(new Set());
 
   const createConversation = async (firstMessage: string) => {
     try {
@@ -95,7 +100,10 @@ export const useChatsStore = defineStore("chats", () => {
     if (!conversations.value.size) {
       const convs = await fetchConversations();
       convs.forEach(({ id, name }) => {
-        conversations.value.set(id, { name, messages: new Map() });
+        conversations.value.set(id, {
+          name,
+          messages: new Map<number, Message>(),
+        });
       });
       return convs;
     }
@@ -117,12 +125,14 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const deleteConversation = async (id: number) => {
+  const deleteConversation = async (convId: number) => {
     try {
-      await $fetch(`/api/chats/${id}`, {
+      const conv = conversations.value.get(convId);
+      activeStreams.get(convId)?.abort();
+      await $fetch(`/api/chats/${convId}`, {
         method: "DELETE",
       });
-      conversations.value.delete(id);
+      conversations.value.delete(convId);
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
       throw new Error("Fetch error");
@@ -179,27 +189,48 @@ export const useChatsStore = defineStore("chats", () => {
   const streamAssistantReply = async (convId: number, messageId: number, replyId: number) => {
     // const storedReply = ref(conversations.value.get(convId)?.messages.get(replyId));
     // console.log(`storedReply: ${storedReply.value}`);
+    const conv = conversations.value.get(convId);
+    const msg = conv?.messages.get(replyId);
+    if (!conv || !msg) return;
+    const abortController = new AbortController();
+    activeStreams.set(convId, abortController);
 
-    await getAnswer(messageId, replyId, (chunk: string) => {
-      const msg = conversations.value.get(convId)?.messages.get(replyId);
-      if (msg) msg.content += chunk;
+    await getAnswer(messageId, replyId, abortController, (chunk: string) => {
+      msg.content += chunk;
     });
     console.log(conversations.value.get(convId)?.messages.get(replyId)?.content);
-
+    activeStreams.delete(convId);
+    const currentConvId = Number(useRoute().params.id);
+    if (currentConvId !== convId) {
+      unreadChats.add(convId);
+    }
     // const reply = await getAnswer(messageId, replyId);
     // addMessage(conversations, convId, replyId + 1, { role: "assistant", content: reply });
     // console.log(conversations.value.get(convId)?.messages.get(replyId + 1)?.content);
   };
 
   const streamChatName = async (convId: number, messageId: number, replyId: number) => {
+    const conv = conversations.value.get(convId);
+    console.log("stream chat name", conv);
+    if (!conv) return;
     await getConvName(convId, messageId, replyId, (chunk: string) => {
-      const conv = conversations.value.get(convId);
-      if (conv) conv.name += chunk;
+      // const conv = conversations.value.get(convId);
+      // if (conv)
+      conv.name += chunk;
     });
+  };
+
+  const abortReply = (convId: number) => {
+    const conv = conversations.value.get(convId);
+    if (!conv) return;
+    activeStreams.get(convId)?.abort();
+    activeStreams.delete(convId);
   };
 
   return {
     conversations,
+    activeStreams,
+    unreadChats,
     createConversation,
     fetchConversations,
     initializeConversations,
@@ -210,5 +241,6 @@ export const useChatsStore = defineStore("chats", () => {
     initializeMessages,
     streamAssistantReply,
     streamChatName,
+    abortReply,
   };
 });

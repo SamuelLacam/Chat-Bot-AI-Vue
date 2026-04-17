@@ -12,7 +12,7 @@ import { Ref } from "vue";
 //     method: "POST",
 //     headers: {
 //       Authorization:
-//         "Bearer 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",
+//         "Bearer ",
 //       "Content-Type": "application/json",
 //     },
 //     body: JSON.stringify({
@@ -31,29 +31,35 @@ import { Ref } from "vue";
 
 const config = useRuntimeConfig();
 // TODO: handle ai provider error
-export const getAnswer = async (messages: aiMessages, ref: Ref<string>) => {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${config.openRouterApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      model: "arcee-ai/trinity-large-preview:free",
-      messages,
-      stream: true,
-    }),
-  });
-
-  const reader = response.body?.getReader();
-  if (!reader) {
-    throw new Error("Response body is not readable");
-  }
-
-  const decoder = new TextDecoder();
-  let buffer = "";
-
+export const getAnswer = async (
+  messages: aiMessages,
+  ref: Ref<string>,
+  streamController: AbortController,
+) => {
+  let reader;
   try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${config.openRouterApiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "arcee-ai/trinity-large-preview:free",
+        messages,
+        stream: true,
+      }),
+      signal: streamController.signal,
+    });
+
+    reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error("Response body is not readable");
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = "";
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
@@ -64,7 +70,7 @@ export const getAnswer = async (messages: aiMessages, ref: Ref<string>) => {
 
       // Append new chunk to buffer
       buffer += decoder.decode(value, { stream: true });
-      // console.log(buffer);
+      console.log(buffer);
 
       // Process complete lines from buffer
       while (true) {
@@ -92,7 +98,9 @@ export const getAnswer = async (messages: aiMessages, ref: Ref<string>) => {
         }
       }
     }
+  } catch (error: any) {
+    // console.error(error.message);
   } finally {
-    reader.cancel();
+    reader?.cancel();
   }
 };

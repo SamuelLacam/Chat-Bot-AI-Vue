@@ -1,7 +1,9 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+// import { Writable } from "node:stream";
 import { ref, watch } from "vue";
 
 export default defineEventHandler(async (event) => {
+  const clientController = event.web?.request?.signal;
   try {
     const messageId = event.context.params?.messageId;
     const { replyId } = await readBody(event);
@@ -38,23 +40,33 @@ export default defineEventHandler(async (event) => {
     let reply = "";
     const token = ref("");
     const res = event.node.res;
+    const streamController = new AbortController();
+    // Web stream
+    // const res2 = Writable.toWeb(event.node.res);
+    // const w = res2.getWriter();
+    // w.write();
 
     watch(token, (newToken) => {
       res.write(`data: "${newToken}"\n\n`);
       reply += newToken;
     });
 
+    res.on("close", () => {
+      if (!res.writableEnded) streamController.abort();
+    });
+
     const messages: aiMessages = [{ role: "user", content }];
-    await getAnswer(messages, token);
+    await getAnswer(messages, token, streamController);
 
     // TODO Are we really need of conversation_id ?
     await db.execute<ResultSetHeader>(
       "update message set conversation_id = ?, content = ?, role = ? where id = ?",
       [results[0].conversation_id, reply, "assistant", replyId],
     );
-    res.end();
+    if (!clientController?.aborted) res.end();
   } catch (error: any) {
-    console.log(error.message);
+    // console.log(error.message);
+    if (clientController?.aborted) return;
     if (error.statusCode) throw error;
     throw new ServerError();
   }

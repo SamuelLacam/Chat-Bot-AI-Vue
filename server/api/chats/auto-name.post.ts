@@ -68,15 +68,21 @@ export default defineEventHandler(async (event) => {
     let convName = "";
     const token = ref("");
     const res = event.node.res;
+    const streamController = new AbortController();
 
     watch(token, (newToken) => {
       res.write(`data: "${newToken}"\n\n`);
       convName += newToken;
     });
 
+    res.on("close", () => {
+      if (!res.writableEnded) streamController.abort();
+    });
+
     const messages = results as aiMessages;
     messages.push({ role: "system", content: PROMPT_SYSTEM });
-    await getAnswer(messages, token);
+    // TODO: create the AbortController
+    await getAnswer(messages, token, streamController);
 
     await db.execute("update conversation set name = ? where id = ? and user_id = ?", [
       convName,

@@ -10,6 +10,20 @@ const inputRef = ref<HTMLInputElement | null>(null);
 const showRename = ref(false);
 const newName = ref(props.chat.name);
 
+const notification = computed(() => {
+  console.log("hasUnreadReply modified:", chatsStore.unreadChats.has(props.chat.id) ?? false);
+  return chatsStore.unreadChats.has(props.chat.id) ?? false;
+});
+
+// const observator = useObservator();
+// observator.
+// const replyNotification = ref(false);
+// watch(observator.get(props.chat.id), (replyFinished) => {
+//   if (!replyFinished && Number(useRoute().params.id) !== props.chat.id)
+//     replyNotification.value = true;
+// });
+// // const replyFinished = computed(() => observator.get(props.chat.id));
+
 const showRenameInput = async () => {
   showRename.value = true;
   newName.value = props.chat.name;
@@ -40,7 +54,7 @@ const deleteChat = async () => {
 </script>
 
 <template>
-  <div class="chat-item-container">
+  <div :class="{ 'reply-notification': notification }" class="chat-item-container">
     <button @click="navigateTo(`/chat/${chat.id}`)">
       <div class="icon">
         <svg
@@ -185,6 +199,31 @@ button {
 
 .chat-item-container:hover .menu-ellipsis {
   color: #000000; /* Dernier SVG reste noir au hover du conteneur */
+}
+
+@keyframes notification {
+  0% {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: rgba(255, 165, 0, 0.6);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+  /* from {
+    background-color: transparent;
+  }
+
+  to {
+    background-color: orange;
+  } */
+}
+
+.reply-notification {
+  animation: notification 2s 2 ease;
 }
 </style>
 

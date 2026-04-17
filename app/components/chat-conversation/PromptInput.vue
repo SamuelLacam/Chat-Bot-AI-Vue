@@ -3,23 +3,26 @@ import { onMounted, ref } from "vue";
 const promptSubmit = inject("promptSubmit") as Function;
 const chatsStore = useChatsStore();
 const inputRef = ref<HTMLInputElement>(null!);
+const convId = Number(useRoute().params.id);
+
+const isReplying = computed(() => {
+  return !!chatsStore.activeStreams.get(convId);
+});
 
 onMounted(() => inputRef.value.focus());
 
-const testRef = ref("");
+// const abort = () => {
+//   chatsStore.abortReply(convId);
+// };
 
 const submitHandle = async () => {
   const inputMessage = inputRef.value.value;
   inputRef.value.value = "";
   if (inputMessage) {
     try {
-      // console.log("ok");
-      // const { convId, messageId } = await promptSubmit(inputMessage);
       promptSubmit(inputMessage, async (convId: number, messageId: number) => {
-        // inputRef.value.value = "";
         const { insertId: replyId } = await chatsStore.createMessage(convId, "", "assistant");
         await chatsStore.streamAssistantReply(convId, messageId, replyId);
-        console.log("Reply is awaited ?");
         return replyId;
       });
     } catch (error: any) {
@@ -32,7 +35,7 @@ const submitHandle = async () => {
 
 <template>
   <div @click="inputRef.focus()" class="prompt-input-container">
-    <button @click.stop class="add-image-btn">
+    <button @click.stop="" class="add-image-btn">
       <svg
         width="20"
         height="20"
@@ -53,7 +56,7 @@ const submitHandle = async () => {
     </button>
     <form @submit.prevent="submitHandle" class="prompt-form">
       <input ref="inputRef" type="text" class="prompt-input" placeholder="Ask a question" />
-      <button @click.stop type="submit" class="send-prompt-btn">
+      <button v-if="!isReplying" @click.stop type="submit" class="send-prompt-btn">
         <svg
           width="20"
           height="20"
@@ -74,6 +77,14 @@ const submitHandle = async () => {
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <button v-else @click.stop="chatsStore.abortReply(convId)" class="send-prompt-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 640 640">
+          <path
+            fill="white"
+            d="M160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 160C96 124.7 124.7 96 160 96z"
           />
         </svg>
       </button>

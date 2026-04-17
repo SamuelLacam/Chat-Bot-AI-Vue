@@ -13,7 +13,12 @@ watch(
 
 <template>
   <div class="chats-container">
-    <ChatItem v-for="[id, chat] in chats" :key="id" :chat="{ id, ...chat }" />
+    <ChatItem
+      @click="chatsStore.unreadChats.delete(id)"
+      v-for="[id, chat] in chats"
+      :key="id"
+      :chat="{ id, ...chat }"
+    />
   </div>
 </template>
 

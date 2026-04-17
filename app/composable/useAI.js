@@ -1,6 +1,6 @@
 // TODO: refactor or install a lib like openai
 
-export const getAnswer = async (messageId, replyId, onChunk) => {
+export const getAnswer = async (messageId, replyId, streamController, onChunk) => {
   console.log(`useAI: ${replyId}`);
   const response = await fetch(`/api/messages/${messageId}/stream`, {
     method: "POST",
@@ -8,6 +8,7 @@ export const getAnswer = async (messageId, replyId, onChunk) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ replyId }),
+    signal: streamController.signal,
   });
   console.log(response);
   const reader = response.body?.getReader();

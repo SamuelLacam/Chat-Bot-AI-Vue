@@ -25,10 +25,11 @@ const addConversation = (
   conversations.value.set(convId, {
     name: "",
     messages,
+    ids: [messageId],
   });
 };
 
-const addMessage = (
+const pushMessage = (
   conversations: Ref<Conversations>,
   convId: number,
   messageId: number,
@@ -37,6 +38,19 @@ const addMessage = (
   const conversation = conversations.value.get(convId);
   if (conversation) {
     conversation.messages.set(messageId, reactive({ ...message }));
+    conversation.ids.push(messageId);
+  }
+};
+const unshiftMessage = (
+  conversations: Ref<Conversations>,
+  convId: number,
+  messageId: number,
+  message: Message,
+) => {
+  const conversation = conversations.value.get(convId);
+  if (conversation) {
+    conversation.messages.set(messageId, reactive({ ...message }));
+    conversation.ids.unshift(messageId);
   }
 };
 
@@ -44,6 +58,8 @@ export const useChatsStore = defineStore("chats", () => {
   const conversations = ref<Conversations>(new Map());
   const activeStreams = reactive<Map<number, AbortController>>(new Map());
   const unreadChats = reactive<Set<number>>(new Set());
+  const offsets = new Map<number, number>(new Map());
+  // const observers = new Map<number, IntersectionObserver>(new Map());
 
   const createConversation = async (firstMessage: string) => {
     try {
@@ -99,10 +115,11 @@ export const useChatsStore = defineStore("chats", () => {
     // });
     if (!conversations.value.size) {
       const convs = await fetchConversations();
-      convs.forEach(({ id, name }) => {
+      convs.forEach(async ({ id, name }) => {
         conversations.value.set(id, {
           name,
           messages: new Map<number, Message>(),
+          ids: [],
         });
       });
       return convs;
@@ -149,7 +166,7 @@ export const useChatsStore = defineStore("chats", () => {
           role,
         },
       });
-      addMessage(conversations, convId, insertId, { content, role });
+      pushMessage(conversations, convId, insertId, { content, role });
       return { insertId };
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
@@ -157,14 +174,14 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const fetchMessages = async (id: number) => {
+  const fetchMessages = async (id: number, offset: number, limit: number) => {
     try {
       const data = await $fetch("/api/messages", {
         method: "GET",
         query: {
           chatId: id,
-          offset: 0,
-          limit: 10,
+          offset,
+          limit,
         },
       });
       return data;
@@ -174,16 +191,70 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const initializeMessages = async (convId: number) => {
+  const setupObserver = (convId: number, target: Ref<HTMLElement>, root: Ref<HTMLElement>) => {
+    console.log("observer setup");
+    const observator = new IntersectionObserver(
+      async ([entry]) => {
+        if (!entry?.isIntersecting) return;
+        console.log("isIntersecting");
+        const previousScrollHeight = root.value.scrollHeight;
+        let offset = offsets.get(convId)!;
+        let limit = offset + 10;
+        const { data: messages, done } = await fetchMessages(convId, offset, limit);
+        messages.forEach(({ id, role, content }) => {
+          unshiftMessage(conversations, convId, id, { role, content });
+          // conversation.messages.set(id, { role, content });
+        });
+        await nextTick();
+        root.value.scrollTop = root.value.scrollHeight - previousScrollHeight;
+        if (done) observator.disconnect();
+        else offsets.set(convId, offset + 10);
+      },
+      { root: root.value },
+    );
+    observator.observe(target.value);
+  };
+
+  const initializeMessages = async (
+    convId: number,
+    target: Ref<HTMLElement>,
+    root: Ref<HTMLElement>,
+  ) => {
+    const pageIsScrollable = () => {
+      console.log("height:", root.value?.scrollHeight);
+      console.log("height:", root.value?.clientHeight);
+      return root.value?.scrollHeight > root.value?.clientHeight;
+    };
     const conversation = conversations.value.get(convId);
     if (!conversation) throw new Error("This conversation is unavailable");
     if (!conversation.messages.size) {
-      const messages = await fetchMessages(convId);
-      messages.forEach(({ id, role, content }) => {
-        addMessage(conversations, convId, id, { role, content });
-        // conversation.messages.set(id, { role, content });
-      });
+      let result;
+      let offset = 0;
+      let limit = 10;
+      do {
+        result = await fetchMessages(convId, offset, limit);
+        const { data: messages, done } = result;
+        // if (done) observator.disconnect();
+        messages.forEach(({ id, role, content }) => {
+          // conversation.messages.set(id, { role, content });
+          unshiftMessage(conversations, convId, id, { role, content });
+        });
+        offset += 10;
+        limit += 10;
+        await nextTick();
+        await nextTick();
+      } while (!pageIsScrollable() && !result.done);
+      offsets.set(convId, offset);
     }
+    root.value.scrollTo(0, root.value.scrollHeight);
+    console.log("m size", conversation.messages.size);
+    setupObserver(convId, target, root);
+    // await nextTick();
+    // await nextTick();
+    // pageIsScrollable();
+    // setTimeout(() => {
+    //   pageIsScrollable();
+    // }, 1000);
   };
 
   const streamAssistantReply = async (convId: number, messageId: number, replyId: number) => {

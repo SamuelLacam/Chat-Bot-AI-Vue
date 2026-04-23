@@ -1,18 +1,26 @@
 <script setup lang="ts">
 import Message from "./Message.vue";
 
+const root = ref<HTMLElement | null>(null);
+const target = ref<HTMLElement | null>(null);
 const chatsStore = useChatsStore();
 
 // const messages = ref<Conversation["messages"]>(null!);
 const convId = Number(useRoute().params.id);
-const messages = computed<Conversation["messages"] | undefined>(() => {
-  // console.log("messages updated");
-  return chatsStore.conversations.get(convId)?.messages;
+const conv = chatsStore.conversations.get(convId);
+const messages = computed(() => {
+  console.log("messages updated");
+  // return chatsStore.conversations.get(convId)?.messages;
+  return conv!.ids.map((id) => [id, conv!.messages.get(id)!] as const);
 });
+
+// const pageIsScrollable = () => {
+//   return root.value!.scrollHeight > root.value!.clientHeight;
+// };
 
 onMounted(async () => {
   try {
-    await chatsStore.initializeMessages(convId);
+    await chatsStore.initializeMessages(convId, target, root);
     // messages.value = chatsStore.conversations.get(chatId)!.messages;
   } catch (error: any) {
     await navigateTo("/");
@@ -22,8 +30,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div ref="root" class="wrapper">
     <div class="conversation-container">
+      <div ref="target"></div>
       <Message v-for="[id, msg] in messages" :key="id" :message="msg" />
       <br />
     </div>
@@ -52,10 +61,10 @@ onMounted(async () => {
   gap: 40px;
 }
 
-.conversation-container::after {
+/* .conversation-container::after {
   content: "";
   display: block;
   height: 30px;
   width: 100px;
-}
+} */
 </style>

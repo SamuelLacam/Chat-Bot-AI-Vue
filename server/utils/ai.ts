@@ -45,7 +45,7 @@ export const getAnswer = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "arcee-ai/trinity-large-preview:free",
+        model: "inclusionai/ling-2.6-flash:free",
         messages,
         stream: true,
       }),

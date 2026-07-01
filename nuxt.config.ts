@@ -34,5 +34,6 @@ export default defineNuxtConfig({
     dbPassword: process.env.DB_PASSWORD,
     jwtKey: process.env.JWT_KEY,
     openRouterApiKey: process.env.OPEN_ROUTER_API_KEY,
+    openRouterLlmId: process.env.OPEN_ROUTER_LLM_ID,
   },
 });

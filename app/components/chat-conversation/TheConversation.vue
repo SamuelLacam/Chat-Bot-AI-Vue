@@ -8,11 +8,11 @@ const chatsStore = useChatsStore();
 // const messages = ref<Conversation["messages"]>(null!);
 const convId = Number(useRoute().params.id);
 const conv = chatsStore.conversations.get(convId);
-const messages = computed(() => {
-  console.log("messages updated");
-  // return chatsStore.conversations.get(convId)?.messages;
-  return conv!.ids.map((id) => [id, conv!.messages.get(id)!] as const);
-});
+// const messages = computed(() => {
+//   console.log("messages updated");
+//   // return chatsStore.conversations.get(convId)?.messages;
+//   return conv!.ids.map((id) => [id, conv!.messages.get(id)!] as const);
+// });
 
 // const pageIsScrollable = () => {
 //   return root.value!.scrollHeight > root.value!.clientHeight;
@@ -20,8 +20,12 @@ const messages = computed(() => {
 
 onMounted(async () => {
   try {
-    await chatsStore.initializeMessages(convId, target, root);
-    // messages.value = chatsStore.conversations.get(chatId)!.messages;
+    await chatsStore.initializeMessages(
+      convId,
+      target as Ref<HTMLElement>,
+      root as Ref<HTMLElement>,
+    );
+    // messages.value = chatsStore.conversations.get(chatId)!.messages;+
   } catch (error: any) {
     await navigateTo("/");
     console.error(error.message);
@@ -33,7 +37,7 @@ onMounted(async () => {
   <div ref="root" class="wrapper">
     <div class="conversation-container">
       <div ref="target"></div>
-      <Message v-for="[id, msg] in messages" :key="id" :message="msg" />
+      <Message v-for="id in conv?.ids" :key="id" :message="conv?.messages.get(id)!" />
       <br />
     </div>
   </div>

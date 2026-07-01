@@ -176,6 +176,7 @@ export const useChatsStore = defineStore("chats", () => {
 
   const fetchMessages = async (id: number, offset: number, limit: number) => {
     try {
+      console.log("fetch2:", offset, limit);
       const data = await $fetch("/api/messages", {
         method: "GET",
         query: {
@@ -198,7 +199,7 @@ export const useChatsStore = defineStore("chats", () => {
         if (!entry?.isIntersecting) return;
         console.log("isIntersecting");
         const previousScrollHeight = root.value.scrollHeight;
-        let offset = offsets.get(convId)!;
+        let offset = offsets.get(convId) ?? 0;
         let limit = offset + 10;
         const { data: messages, done } = await fetchMessages(convId, offset, limit);
         messages.forEach(({ id, role, content }) => {
@@ -215,6 +216,7 @@ export const useChatsStore = defineStore("chats", () => {
     observator.observe(target.value);
   };
 
+  // TODO: REFACTOR !!!! 🤮🤮🤮🤮
   const initializeMessages = async (
     convId: number,
     target: Ref<HTMLElement>,
@@ -232,6 +234,7 @@ export const useChatsStore = defineStore("chats", () => {
       let offset = 0;
       let limit = 10;
       do {
+        console.log("fetch1:", offset, limit);
         result = await fetchMessages(convId, offset, limit);
         const { data: messages, done } = result;
         // if (done) observator.disconnect();
@@ -282,7 +285,7 @@ export const useChatsStore = defineStore("chats", () => {
 
   const streamChatName = async (convId: number, messageId: number, replyId: number) => {
     const conv = conversations.value.get(convId);
-    console.log("stream chat name", conv);
+    console.log("!!!!stream chat name", conv);
     if (!conv) return;
     await getConvName(convId, messageId, replyId, (chunk: string) => {
       // const conv = conversations.value.get(convId);

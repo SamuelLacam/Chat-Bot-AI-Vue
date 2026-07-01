@@ -1,10 +1,3 @@
-// meta-llama/llama-3.3-8b-instruct:free
-// mistralai/mistral-small-3.2-24b-instruct:free
-// mistralai/mistral-small-24b-instruct-2501:free
-// deepseek/deepseek-chat-v3.1:free
-// arcee-ai/trinity-large-preview:free
-// nvidia/nemotron-3-nano-30b-a3b:free
-
 import { Ref } from "vue";
 
 // export const getAnswerTest = async (prompt: string) => {
@@ -45,7 +38,7 @@ export const getAnswer = async (
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "inclusionai/ling-2.6-flash:free",
+        model: config.openRouterLlmId,
         messages,
         stream: true,
       }),

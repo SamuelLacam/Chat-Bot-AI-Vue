@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     const [res1] = await db.execute<RowDataPacket[]>(
       "select m.id, role, content " +
         "from message m join conversation c on m.conversation_id = c.id" +
-        " where c.id = ? and c.user_id = ? order by m.created_at desc, id desc limit ? offset ?",
+        " where c.id = ? and c.user_id = ? order by m.id desc limit ? offset ?",
       [chatId, userId, limit, offset],
     );
     const [res2] = await db.execute<RowDataPacket[]>(

@@ -2,7 +2,7 @@ import { RowDataPacket } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   try {
-    const { chatId, offset, limit } = getQuery(event);
+    let { chatId, offset, limit } = getQuery(event);
     // console.log(chatId, offset, limit);
     if (
       !chatId ||
@@ -17,6 +17,7 @@ export default defineEventHandler(async (event) => {
         statusMessage: "chatId, limit and offset query param expeted",
       });
     }
+
     const userId = event.context.user.userId;
     const db = getPool();
     const [res1] = await db.execute<RowDataPacket[]>(
@@ -31,8 +32,10 @@ export default defineEventHandler(async (event) => {
       [chatId, userId],
     );
 
+    offset = Number(offset);
+    limit = Number(limit);
     const [{ total }] = res2;
-    const done = limit >= total;
+    const done = offset + limit >= total;
     const result = { data: res1, done } as {
       data: { id: number; role: string; content: string }[];
       done: boolean;

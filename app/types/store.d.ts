@@ -4,6 +4,7 @@ type Conversation = {
   name: string;
   messages: Map<number, Message>;
   ids: number[];
+  done: boolean;
 };
 
 type Message = {

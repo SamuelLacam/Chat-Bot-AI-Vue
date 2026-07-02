@@ -26,6 +26,7 @@ const addConversation = (
     name: "",
     messages,
     ids: [messageId],
+    done: true,
   });
 };
 
@@ -53,6 +54,8 @@ const unshiftMessage = (
     conversation.ids.unshift(messageId);
   }
 };
+
+const PAGE_SIZE = 10;
 
 export const useChatsStore = defineStore("chats", () => {
   const conversations = ref<Conversations>(new Map());
@@ -120,6 +123,7 @@ export const useChatsStore = defineStore("chats", () => {
           name,
           messages: new Map<number, Message>(),
           ids: [],
+          done: false,
         });
       });
       return convs;
@@ -176,7 +180,7 @@ export const useChatsStore = defineStore("chats", () => {
 
   const fetchMessages = async (id: number, offset: number, limit: number) => {
     try {
-      console.log("fetch2:", offset, limit);
+      // console.log("fetch2:", offset, limit);
       const data = await $fetch("/api/messages", {
         method: "GET",
         query: {
@@ -192,7 +196,12 @@ export const useChatsStore = defineStore("chats", () => {
     }
   };
 
-  const setupObserver = (convId: number, target: Ref<HTMLElement>, root: Ref<HTMLElement>) => {
+  const setupObserver = (
+    conversation: Conversation,
+    convId: number,
+    target: Ref<HTMLElement>,
+    root: Ref<HTMLElement>,
+  ) => {
     console.log("observer setup");
     const observator = new IntersectionObserver(
       async ([entry]) => {
@@ -200,16 +209,17 @@ export const useChatsStore = defineStore("chats", () => {
         console.log("isIntersecting");
         const previousScrollHeight = root.value.scrollHeight;
         let offset = offsets.get(convId) ?? 0;
-        let limit = offset + 10;
-        const { data: messages, done } = await fetchMessages(convId, offset, limit);
+        console.log("fetch2:", offset, PAGE_SIZE);
+        const { data: messages, done } = await fetchMessages(convId, offset, PAGE_SIZE);
+        conversation.done = done;
         messages.forEach(({ id, role, content }) => {
           unshiftMessage(conversations, convId, id, { role, content });
           // conversation.messages.set(id, { role, content });
         });
         await nextTick();
         root.value.scrollTop = root.value.scrollHeight - previousScrollHeight;
-        if (done) observator.disconnect();
-        else offsets.set(convId, offset + 10);
+        if (conversation.done) observator.disconnect();
+        else offsets.set(convId, offset + PAGE_SIZE);
       },
       { root: root.value },
     );
@@ -223,35 +233,41 @@ export const useChatsStore = defineStore("chats", () => {
     root: Ref<HTMLElement>,
   ) => {
     const pageIsScrollable = () => {
-      console.log("height:", root.value?.scrollHeight);
-      console.log("height:", root.value?.clientHeight);
+      // console.log("height:", root.value?.scrollHeight);
+      // console.log("height:", root.value?.clientHeight);
       return root.value?.scrollHeight > root.value?.clientHeight;
     };
     const conversation = conversations.value.get(convId);
     if (!conversation) throw new Error("This conversation is unavailable");
+    console.log("m size", conversation.messages.size);
     if (!conversation.messages.size) {
       let result;
       let offset = 0;
-      let limit = 10;
       do {
-        console.log("fetch1:", offset, limit);
-        result = await fetchMessages(convId, offset, limit);
+        console.log("fetch1:", offset, PAGE_SIZE);
+        result = await fetchMessages(convId, offset, PAGE_SIZE);
         const { data: messages, done } = result;
+        conversation.done = done;
         // if (done) observator.disconnect();
         messages.forEach(({ id, role, content }) => {
           // conversation.messages.set(id, { role, content });
           unshiftMessage(conversations, convId, id, { role, content });
         });
-        offset += 10;
-        limit += 10;
+        console.log("messages.length", messages.length);
+        console.log("m size", conversation.messages.size);
+        offset += PAGE_SIZE;
         await nextTick();
         await nextTick();
-      } while (!pageIsScrollable() && !result.done);
+        console.log("conversation.done", conversation.done);
+        console.log("pageIsScrollable", pageIsScrollable());
+        console.log("height:", root.value?.scrollHeight);
+        console.log("height:", root.value?.clientHeight);
+      } while (!pageIsScrollable() && !conversation.done);
       offsets.set(convId, offset);
     }
     root.value.scrollTo(0, root.value.scrollHeight);
     console.log("m size", conversation.messages.size);
-    setupObserver(convId, target, root);
+    if (!conversation.done) setupObserver(conversation, convId, target, root);
     // await nextTick();
     // await nextTick();
     // pageIsScrollable();

@@ -12,9 +12,13 @@ services:
       - monreseau
     environment:
       - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+      # - CHOKIDAR_USEPOLLING=true
+      # - CHOKIDAR_INTERVAL=1000
+    env_file:
+      - .env
     volumes:
       - ./app:/app
-      - /app/node_modules
+      - node_modules:/app/node_modules
 
   db:
     build: ./db
@@ -26,3 +30,6 @@ services:
 
 networks:
   monreseau:
+
+volumes:
+  node_modules:

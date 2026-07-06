@@ -12,13 +12,22 @@ services:
       - monreseau
     environment:
       - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-      # - CHOKIDAR_USEPOLLING=true
-      # - CHOKIDAR_INTERVAL=1000
     env_file:
       - .env
-    volumes:
-      - ./app:/app
-      - node_modules:/app/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app
+          # ignore:
+          #   - node_modules/
+          #   - .nuxt/
+        - action: rebuild
+          path: ./package.json
+        - action: rebuild
+          path: ./pnpm-lock.yaml
+        - action: rebuild
+          path: ./pnpm-workspace.yaml
 
   db:
     build: ./db
@@ -30,6 +39,3 @@ services:
 
 networks:
   monreseau:
-
-volumes:
-  node_modules:

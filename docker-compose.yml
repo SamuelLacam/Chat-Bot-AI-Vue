@@ -1,0 +1,28 @@
+services:
+  monapp:
+    build:
+      context: ./app
+      target: dev
+    image: gizelle-app
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    networks:
+      - monreseau
+    environment:
+      - COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+    volumes:
+      - ./app:/app
+      - /app/node_modules
+
+  db:
+    build: ./db
+    image: gizelle-db
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+    networks:
+      - monreseau
+
+networks:
+  monreseau:

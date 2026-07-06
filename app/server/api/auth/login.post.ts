@@ -1,4 +1,4 @@
-import jwt from "jwt";
+import jwt from "jsonwebtoken";
 import { RowDataPacket } from "mysql2";
 
 export default defineEventHandler(async (event) => {
@@ -15,7 +15,12 @@ export default defineEventHandler(async (event) => {
     // console.log("userId", userId);
     // console.log("result[0]", results);
     if (userId) {
-      const token = jwt.encode({ userId, exp: Math.floor(Date.now()) + 3600000 }, config.jwtKey);
+      // const token = jwt.encode({ userId, exp: Math.floor(Date.now()) + 3600000 }, config.jwtKey);
+      const token = jwt.sign(
+        { userId },
+        config.jwtKey,
+        { expiresIn: "1h" }, // ou 3600 secondes
+      );
       setCookie(event, "Gizelle-jwt-auth", token, {
         path: "/",
         httpOnly: true,

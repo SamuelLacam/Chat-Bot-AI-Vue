@@ -1,4 +1,4 @@
-import jwt from "jwt";
+import jwt from "jsonwebtoken";
 
 const isPublicPath = (url: URL): boolean => {
   const publicPath = [

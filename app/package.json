@@ -12,7 +12,7 @@
   "dependencies": {
     "@pinia/nuxt": "0.11.2",
     "dompurify": "^3.2.6",
-    "jwt": "link:../../../../../../AppData/Local/pnpm/global/5/node_modules/jwt",
+    "jsonwebtoken": "^9.0.3",
     "marked": "^16.2.1",
     "mysql2": "^3.14.5",
     "nuxt": "^4.1.1",

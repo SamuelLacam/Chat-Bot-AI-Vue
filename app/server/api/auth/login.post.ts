@@ -36,6 +36,8 @@ export default defineEventHandler(async (event) => {
       });
     }
   } catch (error: any) {
+    console.log(error);
+    console.log("eeeeeeeeee\n", error.message);
     if (error.statusCode) {
       throw error;
     }

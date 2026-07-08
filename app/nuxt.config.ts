@@ -2,7 +2,8 @@
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  modules: ["@nuxt/eslint", "@pinia/nuxt"],
+  // modules: ["@nuxt/eslint", "@pinia/nuxt"],
+  modules: ["@pinia/nuxt"],
   // ssr: false,
   routeRules: {
     // "/": { redirect: "/new" },
@@ -26,14 +27,25 @@ export default defineNuxtConfig({
   //   },
   // },
 
+  // env var prefixed by 'NUXT_' so the env var is set up at runtime (not in build time)
   runtimeConfig: {
-    dbHost: process.env.DB_HOST,
-    dbPort: process.env.DB_PORT,
-    dbName: process.env.DB_NAME,
-    dbUser: process.env.DB_USER,
-    dbPassword: process.env.DB_PASSWORD,
-    jwtKey: process.env.JWT_KEY,
-    openRouterApiKey: process.env.OPEN_ROUTER_API_KEY,
-    openRouterLlmId: process.env.OPEN_ROUTER_LLM_ID,
+    dbHost: "",
+    dbPort: "",
+    dbName: "",
+    dbUser: "",
+    dbPassword: "",
+    jwtKey: "",
+    openRouterApiKey: "",
+    openRouterLlmId: "",
   },
+  // runtimeConfig: {
+  //   dbHost: process.env.DB_HOST,
+  //   dbPort: process.env.DB_PORT,
+  //   dbName: process.env.DB_NAME,
+  //   dbUser: process.env.DB_USER,
+  //   dbPassword: process.env.DB_PASSWORD,
+  //   jwtKey: process.env.JWT_KEY,
+  //   openRouterApiKey: process.env.OPEN_ROUTER_API_KEY,
+  //   openRouterLlmId: process.env.OPEN_ROUTER_LLM_ID,
+  // },
 });

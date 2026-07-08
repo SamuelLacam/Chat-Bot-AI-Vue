@@ -1,9 +1,9 @@
 services:
-  monapp:
+  app:
     build:
       context: ./app
-      target: dev
-    image: gizelle-app
+      target: ${CONTAINER_ENV:-dev}
+    image: gizelle-app-${CONTAINER_ENV:-dev}
     depends_on:
       - db
     ports:

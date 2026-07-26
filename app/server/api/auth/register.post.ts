@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { ResultSetHeader } from "mysql2";
+import type { ResultSetHeader } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();

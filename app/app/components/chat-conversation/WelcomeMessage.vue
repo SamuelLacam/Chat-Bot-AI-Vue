@@ -14,7 +14,7 @@ defineProps({
     </Transition>
   </div>
   <!-- counterbalance grow to keep the welcome-message in same place -->
-  <div :class="{ grow: !showWelcomeMessage }"></div>
+  <div :class="{ grow: !showWelcomeMessage }" />
 </template>
 
 <style scoped>

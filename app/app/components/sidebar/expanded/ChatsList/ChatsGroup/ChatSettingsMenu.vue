@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const props = defineProps<{ chat: chat }>();
-// const emit = defineEmits<{ (e: "delete", id: number): void; (e: "rename", id: number): void }>();
+defineEmits<{
+  delete: [];
+  rename: [];
+}>();
 
 const rootEl = ref<HTMLDivElement | null>(null);
 defineExpose({

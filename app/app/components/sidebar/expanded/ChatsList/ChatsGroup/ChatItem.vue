@@ -100,20 +100,20 @@ const deleteChat = async () => {
       </span>
       <input
         v-else
+        ref="inputRef"
         v-model="newName"
+        type="text"
         @keydown.enter="renameChat()"
         @keydown.esc="showRename = false"
-        ref="inputRef"
-        type="text"
       />
     </button>
     <div class="anchor">
       <!-- <ClientOnly> -->
       <EllipsisBtn
         :chat="chat"
+        class="menu-ellipsis-container"
         @rename="showRenameInput()"
         @delete="deleteChat()"
-        class="menu-ellipsis-container"
       />
       <!-- </ClientOnly> -->
     </div>

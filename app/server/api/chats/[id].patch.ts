@@ -19,6 +19,6 @@ export default defineEventHandler(async (event) => {
     ]);
   } catch (error: any) {
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

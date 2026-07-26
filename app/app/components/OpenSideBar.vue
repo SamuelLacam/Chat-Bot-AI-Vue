@@ -1,8 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import ChatsList from "./sidebar/expanded/ChatsList.vue";
 import SideBarActions from "./sidebar/shared/SideBarActions.vue";
 import SideBarHeader from "./sidebar/shared/SideBarHeader.vue";
 import UserSettingsBtn from "./sidebar/shared/UserSettingsBtn.vue";
+defineEmits<{
+  reduceSideBar: [];
+}>();
 </script>
 
 <template>

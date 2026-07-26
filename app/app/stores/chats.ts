@@ -76,7 +76,7 @@ export const useChatsStore = defineStore("chats", () => {
       return { convId: data.convId, messageId: data.messageId };
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
@@ -107,7 +107,7 @@ export const useChatsStore = defineStore("chats", () => {
       return data;
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
@@ -142,13 +142,13 @@ export const useChatsStore = defineStore("chats", () => {
       if (conv) conv.name = newName;
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
   const deleteConversation = async (convId: number) => {
     try {
-      const conv = conversations.value.get(convId);
+      // const conv = conversations.value.get(convId);
       activeStreams.get(convId)?.abort();
       await $fetch(`/api/chats/${convId}`, {
         method: "DELETE",
@@ -156,7 +156,7 @@ export const useChatsStore = defineStore("chats", () => {
       conversations.value.delete(convId);
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
@@ -174,7 +174,7 @@ export const useChatsStore = defineStore("chats", () => {
       return { insertId };
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
@@ -192,7 +192,7 @@ export const useChatsStore = defineStore("chats", () => {
       return data;
     } catch (error: any) {
       console.log(error.statusMessage || error.message);
-      throw new Error("Fetch error");
+      throw new Error("Fetch error", { cause: error });
     }
   };
 
@@ -208,7 +208,7 @@ export const useChatsStore = defineStore("chats", () => {
         if (!entry?.isIntersecting) return;
         console.log("isIntersecting");
         const previousScrollHeight = root.value.scrollHeight;
-        let offset = offsets.get(convId) ?? 0;
+        const offset = offsets.get(convId) ?? 0;
         console.log("fetch2:", offset, PAGE_SIZE);
         const { data: messages, done } = await fetchMessages(convId, offset, PAGE_SIZE);
         conversation.done = done;

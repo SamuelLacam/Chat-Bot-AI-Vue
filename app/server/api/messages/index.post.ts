@@ -1,4 +1,4 @@
-import { ResultSetHeader } from "mysql2";
+import type { ResultSetHeader } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   const { convId, content, role } = await readBody(event);
@@ -16,6 +16,6 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.log(error.message);
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

@@ -3,21 +3,21 @@ import ChatItem from "./ChatsGroup/ChatItem.vue";
 
 const chatsStore = useChatsStore();
 const chats = computed<Conversations>(() => chatsStore.conversations);
-watch(chats, (value) => console.log("chats", value), { immediate: true });
-watch(
-  () => chatsStore.conversations,
-  (v) => console.log("aaaaaaa"),
-  { immediate: true },
-);
+// watch(chats, (value) => console.log("chats", value), { immediate: true });
+// watch(
+//   () => chatsStore.conversations,
+//   (_) => console.log("aaaaaaa"),
+//   { immediate: true },
+// );
 </script>
 
 <template>
   <div class="chats-container">
     <ChatItem
-      @click="chatsStore.unreadChats.delete(id)"
       v-for="[id, chat] in chats"
       :key="id"
       :chat="{ id, ...chat }"
+      @click="chatsStore.unreadChats.delete(id)"
     />
   </div>
 </template>

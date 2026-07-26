@@ -1,4 +1,4 @@
-import { ResultSetHeader } from "mysql2";
+import type { ResultSetHeader } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   let pool;
@@ -25,6 +25,6 @@ export default defineEventHandler(async (event) => {
     console.error(error.message);
     await db?.rollback();
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

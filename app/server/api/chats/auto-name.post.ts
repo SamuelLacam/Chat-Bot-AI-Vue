@@ -1,4 +1,4 @@
-import { RowDataPacket } from "mysql2";
+import type { RowDataPacket } from "mysql2";
 import { ref, watch } from "vue";
 
 const PROMPT_SYSTEM = `You are a conversation title generator. Your sole purpose is to produce a single, concise title for a conversation based on its content.
@@ -93,6 +93,6 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.log(error.message);
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

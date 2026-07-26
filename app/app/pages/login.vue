@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FetchError } from "ofetch";
+import type { FetchError } from "ofetch";
 const loginInput = ref<HTMLInputElement | null>(null);
 onMounted(() => loginInput.value?.focus());
 

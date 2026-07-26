@@ -1,29 +1,37 @@
 # Get started
 
-Look .env.example and create your own .env file
+1. Copy `.env.example` to `.env` and fill in your own values.
+2. Install dependencies:
+
+```bash
+   pnpm i
+```
+
+> Not strictly required to run the app, since `pnpm-lock.yaml` is already committed to the repo — but you'll want this locally so your editor (e.g. VSCode) can resolve packages for IntelliSense.
 
 ## Development container
 
-Run and Build docker image:
+Build and run the container in watch mode:
 
 ```bash
 docker compose up --watch
 ```
 
-go to: `http://localhost:3000`:
+App available at: http://localhost:3000
 
 ## Production container
 
-Run and Build docker image:
-
-- change `CONTAINER_ENV` key in the .env to `prod`
-
-```bash
-docker compose up
-```
-
-or this command to rebuild if you are already build dev image
+1. Set `CONTAINER_ENV=prod` in your `.env` file.
+2. Build and start the app:
 
 ```bash
-docker compose up --build
+   docker compose up
 ```
+
+Or, if you already have a dev image built and need to rebuild:
+
+```bash
+   docker compose up --build
+```
+
+Test the production build at: http://localhost:3000

@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { RowDataPacket } from "mysql2";
+import type { RowDataPacket } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -38,14 +38,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.log(error);
     console.log("eeeeeeeeee\n", error.message);
-    if (error.statusCode) {
-      throw error;
-    }
-
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Server error",
-      message: "Internal problem, please try again later",
-    });
+    if (error.statusCode) throw error;
+    throw createServerError();
   }
 });

@@ -1,8 +1,8 @@
 <template>
   <div class="logo-wrapper">
     <div class="logo">
-      <div class="blue-laces"></div>
-      <div class="purple-laces"></div>
+      <div class="blue-laces" />
+      <div class="purple-laces" />
     </div>
   </div>
 </template>

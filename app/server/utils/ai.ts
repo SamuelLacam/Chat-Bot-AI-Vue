@@ -1,4 +1,4 @@
-import { Ref } from "vue";
+import type { Ref } from "vue";
 
 // export const getAnswerTest = async (prompt: string) => {
 //   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -85,13 +85,13 @@ export const getAnswer = async (
               ref.value = content;
               // await new Promise((resolve) => setTimeout(resolve, 20));
             }
-          } catch (e) {
+          } catch {
             // Ignore invalid JSON
           }
         }
       }
     }
-  } catch (error: any) {
+  } catch {
     // console.error(error.message);
   } finally {
     reader?.cancel();

@@ -21,7 +21,8 @@ watch(
 <template>
   <div :class="['message', `message-${message.role}`]">
     <span v-if="message.role === 'user'"> {{ message.content }}</span>
-    <span v-else-if="message.role === 'assistant'" v-html="aiMessage"></span>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <span v-else-if="message.role === 'assistant'" v-html="aiMessage" />
   </div>
 </template>
 

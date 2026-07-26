@@ -1,4 +1,4 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
+import type { ResultSetHeader, RowDataPacket } from "mysql2";
 // import { Writable } from "node:stream";
 import { ref, watch } from "vue";
 
@@ -68,6 +68,6 @@ export default defineEventHandler(async (event) => {
     // console.log(error.message);
     if (clientController?.aborted) return;
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

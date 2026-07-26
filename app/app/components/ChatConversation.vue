@@ -9,18 +9,14 @@ defineProps<{
   showWelcomeMessage: boolean;
   showConversation: boolean;
 }>();
-
 // const prompts = ref<string[]>([]);
 // const prompt = "";
 </script>
 
 <template>
   <main>
-    <WelcomeMessage
-      v-if="!showConversation"
-      :show-welcome-message="showWelcomeMessage"
-      @animation-finished="showConversation = true"
-    />
+    <!-- @animation-finished="showConversation = true" -->
+    <WelcomeMessage v-if="!showConversation" :show-welcome-message="showWelcomeMessage" />
     <TheConversation v-else />
 
     <section :class="{ grow: showWelcomeMessage }">

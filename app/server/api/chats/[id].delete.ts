@@ -1,4 +1,4 @@
-import { ResultSetHeader } from "mysql2";
+import type { ResultSetHeader } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -20,6 +20,6 @@ export default defineEventHandler(async (event) => {
     // return { affectedRows: result.affectedRows };
   } catch (error: any) {
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

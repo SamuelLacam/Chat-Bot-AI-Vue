@@ -1,5 +1,4 @@
-import { RowDataPacket } from "mysql2";
-import { ServerError } from "~~/server/utils/ServerError";
+import type { RowDataPacket } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -19,6 +18,6 @@ export default defineEventHandler(async (event) => {
     return results as { id: number; name: string }[];
   } catch (error: any) {
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

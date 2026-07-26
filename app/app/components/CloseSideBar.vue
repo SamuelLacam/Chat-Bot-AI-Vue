@@ -2,6 +2,9 @@
 import SideBarActions from "./sidebar/shared/SideBarActions.vue";
 import SideBarHeader from "./sidebar/shared/SideBarHeader.vue";
 import UserSettingsBtn from "./sidebar/shared/UserSettingsBtn.vue";
+defineEmits<{
+  extendSideBar: [];
+}>();
 </script>
 
 <template>

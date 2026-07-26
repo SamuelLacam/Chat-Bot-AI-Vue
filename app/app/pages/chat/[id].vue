@@ -1,10 +1,13 @@
 <script setup lang="ts">
 const chatsStore = useChatsStore();
-provide("promptSubmit", async (content: string, reply: Function) => {
-  const convId = Number(useRoute().params.id);
-  const { insertId: messageId } = await chatsStore.createMessage(convId, content, "user");
-  reply(convId, messageId);
-});
+provide(
+  "promptSubmit",
+  async (content: string, reply: (convId: number, messageId: number) => Promise<number>) => {
+    const convId = Number(useRoute().params.id);
+    const { insertId: messageId } = await chatsStore.createMessage(convId, content, "user");
+    reply(convId, messageId);
+  },
+);
 
 const expandedSideBar = inject("expandedSideBar");
 const showWelcomeMessage = ref(false);
@@ -29,8 +32,8 @@ try {
       <CloseSideBar v-else @extend-side-bar="expandedSideBar = true" />
     </Transition>
     <ChatConversation
-      :showWelcomeMessage="showWelcomeMessage"
-      :showConversation="showConversation"
+      :show-welcome-message="showWelcomeMessage"
+      :show-conversation="showConversation"
     />
   </div>
 </template>

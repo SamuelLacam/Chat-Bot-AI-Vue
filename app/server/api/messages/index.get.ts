@@ -1,8 +1,8 @@
-import { RowDataPacket } from "mysql2";
+import type { RowDataPacket } from "mysql2";
 
 export default defineEventHandler(async (event) => {
   try {
-    let { chatId, offset, limit } = getQuery(event);
+    const { chatId, offset, limit } = getQuery(event);
     // console.log(chatId, offset, limit);
     if (
       !chatId ||
@@ -32,10 +32,10 @@ export default defineEventHandler(async (event) => {
       [chatId, userId],
     );
 
-    offset = Number(offset);
-    limit = Number(limit);
+    const numOffset = Number(offset);
+    const numLimit = Number(limit);
     const [{ total }] = res2;
-    const done = offset + limit >= total;
+    const done = numOffset + numLimit >= total;
     const result = { data: res1, done } as {
       data: { id: number; role: string; content: string }[];
       done: boolean;
@@ -44,6 +44,6 @@ export default defineEventHandler(async (event) => {
   } catch (error: any) {
     console.log(error.message);
     if (error.statusCode) throw error;
-    throw new ServerError();
+    throw createServerError();
   }
 });

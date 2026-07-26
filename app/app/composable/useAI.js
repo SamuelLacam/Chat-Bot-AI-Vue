@@ -48,7 +48,7 @@ export const getAnswer = async (messageId, replyId, streamController, onChunk) =
               onChunk(parsed);
               // await new Promise((resolve) => setTimeout(resolve, 20));
             }
-          } catch (e) {
+          } catch {
             // Ignore invalid JSON
             // console.log(e.message);
           }
@@ -106,7 +106,7 @@ export const getConvName = async (convId, messageId, replyId, onChunk) => {
               onChunk(parsed);
               // await new Promise((resolve) => setTimeout(resolve, 20));
             }
-          } catch (e) {
+          } catch {
             // Ignore invalid JSON
             // console.log(e.message);
           }

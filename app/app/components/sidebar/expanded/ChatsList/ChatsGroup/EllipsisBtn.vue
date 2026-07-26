@@ -3,6 +3,10 @@ import { ref, watch } from "vue";
 import ChatSettingsMenu from "./ChatSettingsMenu.vue";
 
 defineProps<{ chat: chat }>();
+defineEmits<{
+  delete: [];
+  rename: [];
+}>();
 
 const showMenu = ref(false);
 const ellipsisBtnRef = ref<HTMLButtonElement | null>(null);

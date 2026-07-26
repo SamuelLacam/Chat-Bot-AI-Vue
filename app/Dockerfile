@@ -10,7 +10,7 @@ EXPOSE 3000
 CMD ["pnpm", "dev"]
 
 FROM base AS builder
-RUN pnpm i --prod --frozen-lockfile
+RUN pnpm i --frozen-lockfile
 COPY . .
 RUN pnpm build
 

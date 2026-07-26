@@ -36,7 +36,7 @@ onMounted(async () => {
 <template>
   <div ref="root" class="wrapper">
     <div class="conversation-container">
-      <div ref="target"></div>
+      <div ref="target" />
       <Message v-for="id in conv?.ids" :key="id" :message="conv?.messages.get(id)!" />
       <br />
     </div>

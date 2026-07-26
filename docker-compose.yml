@@ -23,11 +23,11 @@ services:
           #   - node_modules/
           #   - .nuxt/
         - action: rebuild
-          path: ./package.json
+          path: ./app/package.json
         - action: rebuild
-          path: ./pnpm-lock.yaml
+          path: ./app/pnpm-lock.yaml
         - action: rebuild
-          path: ./pnpm-workspace.yaml
+          path: ./app/pnpm-workspace.yaml
 
   db:
     build: ./db

@@ -33,7 +33,7 @@ services:
     build: ./db
     image: gizelle-db
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - MYSQL_ROOT_PASSWORD=${NUXT_DB_PASSWORD}
     networks:
       - monreseau
 

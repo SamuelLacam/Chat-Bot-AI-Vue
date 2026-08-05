@@ -61,7 +61,7 @@ export const useChatsStore = defineStore("chats", () => {
   const conversations = ref<Conversations>(new Map());
   const activeStreams = reactive<Map<number, AbortController>>(new Map());
   const unreadChats = reactive<Set<number>>(new Set());
-  const offsets = new Map<number, number>(new Map());
+  const offsets = new Map<number, number>();
   // const observers = new Map<number, IntersectionObserver>(new Map());
 
   const createConversation = async (firstMessage: string) => {
